@@ -396,3 +396,19 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Obsidian
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/appearance.json
+.obsidian/hotkeys.json
+.obsidian/app.json
+.obsidian/cache/
+.obsidian/workspace
+.obsidian/workspace-mobile
+.obsidian/backups/
+.obsidian/trash/
+
+# Obsidian temporary files
+*.temp
+*.temp.md

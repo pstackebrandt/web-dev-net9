@@ -74,8 +74,6 @@ public partial class NorthwindContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //=> optionsBuilder.UseSqlServer("Data Source=tcp:127.0.0.1,1433;Initial Catalog=Northwind;User Id=sa;Password=absEdel43+-bums;TrustServerCertificate=true;");
-
         if (!optionsBuilder.IsConfigured)
         {
             SqlConnectionStringBuilder builder = new();

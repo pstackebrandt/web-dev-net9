@@ -1,6 +1,8 @@
 using Microsoft.Data.SqlClient; // To use SqlConnectionStringBuilder.
 using Microsoft.EntityFrameworkCore; // To use UseSqlServer.
 using Microsoft.Extensions.DependencyInjection; // To useIServiceCollection
+using Microsoft.Extensions.Configuration; // To use IConfiguration
+using Microsoft.Extensions.Options; // To use IOptions
 
 namespace Northwind.EntityModels;
 public static class NorthwindContextExtensions
@@ -18,6 +20,25 @@ public static class NorthwindContextExtensions
     {
         if (connectionString is null)
         {
+            // Get configuration from the service provider
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetService<IConfiguration>();
+            
+            if (configuration == null)
+            {
+                throw new InvalidOperationException("Configuration service is not available");
+            }
+            
+            // Get database settings directly from configuration
+            var username = configuration["Database:MY_SQL_USR"];
+            var password = configuration["Database:MY_SQL_PWD"];
+            
+            // Validate required settings
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                throw new InvalidOperationException("Database credentials are missing in configuration");
+            }
+
             SqlConnectionStringBuilder builder = new();
             builder.DataSource = "tcp:127.0.0.1,1433"; // SQL Edge in Docker.
             builder.InitialCatalog = "Northwind";
@@ -29,8 +50,9 @@ public static class NorthwindContextExtensions
             builder.ConnectTimeout = 3;
 
             // SQL Server authentication.
-            builder.UserID = Environment.GetEnvironmentVariable("MY_SQL_USR");
-            builder.Password = Environment.GetEnvironmentVariable("MY_SQL_PWD");
+            // Get credentials from configuration
+            builder.UserID = username;
+            builder.Password = password;
             connectionString = builder.ConnectionString;
         }
 

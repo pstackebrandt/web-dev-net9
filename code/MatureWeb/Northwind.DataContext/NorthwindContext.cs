@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Northwind.EntityModels;
-
-
 
 public partial class NorthwindContext : DbContext
 {
@@ -76,6 +73,23 @@ public partial class NorthwindContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
+            // Get configuration from appsettings.json
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build();
+
+            // Get database settings directly from configuration
+            var username = configuration["Database:MY_SQL_USR"];
+            var password = configuration["Database:MY_SQL_PWD"];
+
+            // Validate required settings
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                throw new InvalidOperationException(
+                    "Database credentials are missing in configuration");
+            }
+
             SqlConnectionStringBuilder builder = new();
             builder.DataSource = "tcp:127.0.0.1,1433"; // SQL Edge in Docker.
             builder.InitialCatalog = "Northwind";
@@ -83,9 +97,9 @@ public partial class NorthwindContext : DbContext
             builder.MultipleActiveResultSets = true;
             // Because we want to fail faster. Default is 15 seconds.
             builder.ConnectTimeout = 3;
-            // SQL Server authentication.
-            builder.UserID = Environment.GetEnvironmentVariable("MY_SQL_USR");
-            builder.Password = Environment.GetEnvironmentVariable("MY_SQL_PWD");
+            // SQL Server authentication from configuration
+            builder.UserID = username;
+            builder.Password = password;
 
             optionsBuilder.UseSqlServer(builder.ConnectionString);
             optionsBuilder.LogTo(
@@ -93,7 +107,6 @@ public partial class NorthwindContext : DbContext
                 new[] { Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuting }
             );
         }
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

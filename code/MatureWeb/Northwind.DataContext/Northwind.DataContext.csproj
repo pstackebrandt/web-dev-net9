@@ -9,13 +9,16 @@
   <ItemGroup Label="To simplify use of WriteLine">
     <using Include="System.Console" Static="true" />
   </ItemGroup>
-  
+
   <ItemGroup Label="Versions are set at solution-level.">
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-    </ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
+  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference 
+    <ProjectReference
       Include="..\Northwind.EntityModels\Northwind.EntityModels.csproj" />
   </ItemGroup>
 

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="To simplify use of WriteLine">
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    <using Include="System.Console" Static="true" />
   </ItemGroup>
   
   <ItemGroup Label="Versions are set at solution-level.">

@@ -13,6 +13,9 @@ that uses the Northwind database.
 - Edge SQL Server
 - Docker
 
+## Used SDK
+see global.json
+
 ## Configuration and Credentials
 
 ### Development Setup

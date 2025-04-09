@@ -37,7 +37,7 @@
     "MD040": false,
     "MD042": false,
     "MD043": {
-        "headers": ["# ", "## ", "### "]
+        "headings": ["# ", "## ", "### "]
     },
     "MD044": {
         "names": ["Obsidian", "Markdown", "GitHub"]
@@ -51,10 +51,10 @@
         "style": "backtick"
     },
     "MD049": {
-        "style": "backtick"
+        "style": "asterisk"
     },
     "MD050": {
-        "style": "backtick"
+        "style": "asterisk"
     },
     "MD051": false,
     "MD052": false,

@@ -11,28 +11,38 @@ public static class NorthwindContextExtensions
     /// Adds NorthwindContext to the specified IServiceCollection.
     /// Uses the SqlServer database provider.
     /// </summary>
+    /// <remarks>
+    /// This is the preferred way to configure NorthwindContext because:
+    /// - It integrates with ASP.NET Core's dependency injection
+    /// - Can access all configured services and configuration providers
+    /// - Supports multiple configuration sources (not just appsettings.json)
+    /// - Proper integration with ASP.NET Core's configuration system
+    /// 
+    /// Note: This coexists with OnConfiguring in NorthwindContext.cs which serves
+    /// as a fallback for standalone scenarios where DI is not available.
+    /// </remarks>
     /// <param name="services">The service collection.</param>
     /// <param name="connectionString">Set to override the default.</param>
     /// <returns>An IServiceCollection that can be used to add more services.</returns>
     public static IServiceCollection AddNorthwindContext(
         this IServiceCollection services, // The type to extend.
-    string? connectionString = null)
+        string? connectionString = null)
     {
         if (connectionString is null)
         {
             // Get configuration from the service provider
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetService<IConfiguration>();
-            
+
             if (configuration == null)
             {
                 throw new InvalidOperationException("Configuration service is not available");
             }
-            
+
             // Get database settings directly from configuration
             var username = configuration["Database:MY_SQL_USR"];
             var password = configuration["Database:MY_SQL_PWD"];
-            
+
             // Validate required settings
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -64,7 +74,7 @@ public static class NorthwindContextExtensions
                 new[] { Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuting }
             );
         },
-        
+
         // Register with a transient lifetime to avoid concurrency
         // issues with Blazor Server projects.
         contextLifetime: ServiceLifetime.Transient,

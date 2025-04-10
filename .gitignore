@@ -15,6 +15,10 @@ appsettings.json
 appsettings.*.json
 !appsettings.Example.json
 
+# Test settings
+**/appsettings.Testing.json
+!**/appsettings.Testing.Example.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Northwind.EntityModels;
+using Northwind.Shared.Configuration;
 
 namespace Northwind.EntityModels;
 
@@ -69,6 +71,21 @@ public partial class NorthwindContext : DbContext
 
     public virtual DbSet<Territory> Territories { get; set; }
 
+    /// <summary>
+    /// Fallback configuration method (inspired from the book).
+    /// It acts as a fallback if the context isn't configured through dependency injection.
+    /// Uses direct file access to read appsettings.json since DI services 
+    /// aren't available here.
+    /// (It doesn't have access to the dependency injection container
+    ///  It can't access IServiceCollection or IConfiguration from the DI system)
+    /// 
+    /// Note: This approach is kept for:
+    /// - Learning purposes following the book
+    /// - Fallback when DI is not available
+    /// - Standalone usage scenarios
+    /// TODO: Future improvement - Consider removing this in favor of using only 
+    /// AddNorthwindContext in NorthwindContextExtensions.cs for cleaner architecture.
+    /// </summary>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -79,27 +96,15 @@ public partial class NorthwindContext : DbContext
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            // Get database settings directly from configuration
-            var username = configuration["Database:MY_SQL_USR"];
-            var password = configuration["Database:MY_SQL_PWD"];
-
-            // Validate required settings
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            // Create settings from configuration
+            var settings = new DatabaseConnectionSettings
             {
-                throw new InvalidOperationException(
-                    "Database credentials are missing in configuration");
-            }
+                UserID = configuration["Database:MY_SQL_USR"],
+                Password = configuration["Database:MY_SQL_PWD"]
+            };
 
-            SqlConnectionStringBuilder builder = new();
-            builder.DataSource = "tcp:127.0.0.1,1433"; // SQL Edge in Docker.
-            builder.InitialCatalog = "Northwind";
-            builder.TrustServerCertificate = true;
-            builder.MultipleActiveResultSets = true;
-            // Because we want to fail faster. Default is 15 seconds.
-            builder.ConnectTimeout = 3;
-            // SQL Server authentication from configuration
-            builder.UserID = username;
-            builder.Password = password;
+            // Validate and build connection string
+            var builder = DatabaseConnectionBuilder.CreateBuilder(settings);
 
             optionsBuilder.UseSqlServer(builder.ConnectionString);
             optionsBuilder.LogTo(

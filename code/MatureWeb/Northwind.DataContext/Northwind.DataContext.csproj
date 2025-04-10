@@ -20,6 +20,8 @@
   <ItemGroup>
     <ProjectReference
       Include="..\Northwind.EntityModels\Northwind.EntityModels.csproj" />
+    <ProjectReference
+      Include="..\Northwind.Shared\Northwind.Shared.csproj" />
   </ItemGroup>
 
 </Project>

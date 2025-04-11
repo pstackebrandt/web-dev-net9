@@ -20,21 +20,43 @@ see global.json
 
 ### Development Setup
 
-1. Copy `appsettings.Example.json` to `appsettings.json`
-and fill in your actual credentials:
-   ```json
-   {
-     "Database": {
-       "MY_SQL_USR": "your_username",
-       "MY_SQL_PWD": "your_password"
-     }
-   }
+1. Configure user secrets for storing database credentials:
+   ```bash
+   # Initialize user secrets for the project
+   dotnet user-secrets init --project Northwind.DataContext
+   
+   # Set your database credentials
+   dotnet user-secrets set "Database:MY_SQL_USR" "your_username" --project Northwind.DataContext
+   dotnet user-secrets set "Database:MY_SQL_PWD" "your_password" --project Northwind.DataContext
    ```
-2. Add `appsettings.json` to your `.gitignore` file to prevent committing real credentials
 
-## Security Best Practices
+2. For detailed instructions, see [User Secrets Setup Guide](docs/user-secrets-setup.md)
 
-- Never commit real credentials to source control
-- Use different credentials for development and production
-- Regularly rotate credentials
-- Use the principle of least privilege for database access
+3. Copy `appsettings.Example.json` to `appsettings.json` (no credentials needed in this file)
+
+### Configuration Options
+
+#### Database Section
+- **MY_SQL_USR**: Username for SQL Server authentication
+- **MY_SQL_PWD**: Password for SQL Server authentication
+
+#### DatabaseConnection Section
+- **DataSource**: SQL Server connection string (default: tcp:127.0.0.1,1433)
+- **InitialCatalog**: Database name to connect to (default: Northwind)
+- **TrustServerCertificate**: Whether to trust the server certificate without validation (default: true)
+- **MultipleActiveResultSets**: Enables multiple active result sets (MARS) (default: true)
+- **ConnectTimeout**: Connection timeout in seconds
+  - Default: 8 seconds for development
+  - 1 second for testing environment
+
+#### Environment-Specific Configuration
+- Development environment uses the base settings in `appsettings.json`
+- Testing environment overrides certain settings via `appsettings.Testing.json`
+- Sensitive credentials are stored in User Secrets during development, not in configuration files
+- The application automatically loads configuration in this order:
+  1. Base settings from `appsettings.json`
+  2. Environment overrides from `appsettings.{Environment}.json`
+  3. User Secrets (in Development environment only)
+  4. Environment variables (used in production)
+
+For comprehensive security and configuration guidelines, see [Configuration Best Practices](docs/configuration-best-practices.md).

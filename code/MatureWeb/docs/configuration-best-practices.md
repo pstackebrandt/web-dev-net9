@@ -14,6 +14,7 @@ with focus on the layering pattern and credentials management.
 - [User Secrets for Development](#user-secrets-for-development)
   - [Project-Specific Secret Storage](#project-specific-secret-storage)
 - [Configuration Loading Order](#configuration-loading-order)
+- [Security Best Practices](#security-best-practices)
 
 ## Configuration Layering Pattern
 
@@ -138,3 +139,18 @@ The ASP.NET Core configuration system loads settings in this order
 5. Command-line arguments
 
 This allows for flexible, environment-specific configuration without modifying code.
+
+## Security Best Practices
+
+Follow these practices to maintain security of configuration data:
+
+- Never commit real credentials to source control
+- Store development credentials in User Secrets
+- Use environment variables or secure vaults for production credentials
+- Different credentials should be used for development and production
+- Regularly rotate credentials (especially after team member departures)
+- Use the principle of least privilege for database access
+- Avoid hardcoding connection strings or credentials in code
+- Keep sensitive settings (like connection strings) out of logs
+- Encrypt sensitive configuration values when possible
+- Audit access to sensitive configuration regularly

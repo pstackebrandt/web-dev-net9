@@ -18,7 +18,7 @@ A checklist of tasks required to implement best practices for configuration mana
 - [x] Update `appsettings.json` to include full configuration structure:
   - [x] Add `DatabaseConnection` section to match structure in `appsettings.Testing.json`
   - [x] Replace sensitive credentials with placeholder values
-  - [ ] Ensure all configuration options are documented with comments \
+  - [x] Ensure all configuration options are documented with comments \
   (Comments not allowed in JSON, added documentation to README instead)
 
 ## Credentials Management
@@ -63,9 +63,9 @@ A checklist of tasks required to implement best practices for configuration mana
 
 ## Documentation
 
-- [ ] Add README section on configuration management
-- [ ] Document credential management for development and production
-- [ ] Update example configuration files
+- [x] Add README section on configuration management
+- [x] Document credential management for development and production
+- [x] Update example configuration files
 
 ## Why User Secrets for Development
 

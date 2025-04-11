@@ -15,27 +15,28 @@ A checklist of tasks required to implement best practices for configuration mana
 
 ## Core Configuration Structure
 
-- [ ] Update `appsettings.json` to include full configuration structure:
-  - [ ] Add `DatabaseConnection` section to match structure in `appsettings.Testing.json`
-  - [ ] Replace sensitive credentials with placeholder values
-  - [ ] Ensure all configuration options are documented with comments
+- [x] Update `appsettings.json` to include full configuration structure:
+  - [x] Add `DatabaseConnection` section to match structure in `appsettings.Testing.json`
+  - [x] Replace sensitive credentials with placeholder values
+  - [ ] Ensure all configuration options are documented with comments \
+  (Comments not allowed in JSON, added documentation to README instead)
 
 ## Credentials Management
 
-- [ ] Set up User Secrets for development:
-  - [ ] Initialize user secrets for relevant projects
+- [x] Set up User Secrets for development:
+  - [x] Initialize user secrets for relevant projects
   ```bash
   dotnet user-secrets init --project code/MatureWeb/Northwind.DataContext
   ```
-  - [ ] Move database credentials to user secrets
+  - [x] Move database credentials to user secrets
   ```bash
   dotnet user-secrets set "Database:MY_SQL_USR" "sa" \
     --project code/MatureWeb/Northwind.DataContext
   dotnet user-secrets set "Database:MY_SQL_PWD" "yourpassword" \
     --project code/MatureWeb/Northwind.DataContext
   ```
-  - [ ] Update example files to show placeholder values
-  - [ ] Create documentation for new team members to set up secrets
+  - [x] Update example files to show placeholder values
+  - [x] Create documentation for new team members to set up secrets
 
 ## Environment-Specific Configuration
 

@@ -47,3 +47,63 @@ alwaysApply: false
 - MD023: Headers must start at beginning of line
 - MD032: Lists should be surrounded by blank lines
 - MD041: First line should be a top-level header
+
+---
+
+## Shell Command Context Specification
+
+Precede command blocks requiring a specific starting directory or shell
+environment with a single comment line specifying the required shell(s)
+and starting path.
+
+### Starting Path
+- Default: Relative paths from `repo-root` (top-level dir, e.g., with `.git`).
+- Use the most specific relevant directory (e.g., `repo-root/src/project`).
+- Allowed: Absolute paths if necessary (e.g., `C:\Tools`).
+- Use `.` for the specified root/absolute directory itself.
+
+### Shell
+- Default: Generic names (`PS`, `Bash`).
+- Specify versions (`PS7`) or types (`GitBash`, `Cmd`) ONLY if command depends on them.
+
+Assume user is in the specified directory with the appropriate shell.
+
+### Format
+`# <ShellSpecifier>: <PathSpecifier>`
+- `<ShellSpecifier>`: Target shell(s) (`PS`, `Bash`, `Bash/GitBash`, `PS7`).
+- `<PathSpecifier>`: Starting path (relative or absolute). Use `\` or `/` matching shell/OS.
+
+Commands in the block should use paths relative to the specified starting directory.
+
+### Examples
+
+**Generic PS Command (from project dir):**
+```powershell
+# PS: repo-root\code\MatureWeb\Northwind.DataContext
+dotnet user-secrets list --project .\Northwind.DataContext.csproj
+```
+
+**Generic Bash Command (from repo root):**
+```bash
+# Bash: repo-root/.
+git submodule update --init
+```
+
+**PowerShell 7 Specific Command:**
+```powershell
+# PS7: repo-root\scripts
+Get-ChildItem .\*.log | ForEach-Object -Parallel { Remove-Item $_.FullName } -ThrottleLimit 4
+```
+
+**GitBash Specific Scenario:**
+```bash
+# GitBash: repo-root/.
+# Assumes a specific credential helper configured only for GitBash
+git push origin main
+```
+
+**Absolute Path Example (Windows):**
+```powershell
+# PS: C:\ProgramData\MyTool
+.\mytool-config.exe --update-settings
+```

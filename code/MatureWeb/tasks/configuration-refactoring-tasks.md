@@ -40,10 +40,10 @@ A checklist of tasks required to implement best practices for configuration mana
 
 ## Environment-Specific Configuration
 
-- [ ] Update `appsettings.Testing.json` to only contain overrides:
-  - [ ] Remove duplicate settings that match base file values
-  - [ ] Keep different timeout setting (`ConnectTimeout: 1`)
-  - [ ] Remove database credentials (will be in User Secrets)
+- [x] Update `appsettings.Testing.json` to only contain overrides:
+  - [x] Remove duplicate settings that match base file values
+  - [x] Keep different timeout setting (`ConnectTimeout: 1`)
+  - [x] Remove database credentials (will be in User Secrets)
 
 ## Code Changes
 

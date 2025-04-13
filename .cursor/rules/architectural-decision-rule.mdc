@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Architectural Decision Rules
+
+## Consulting Before Making Architectural Decisions
+
+### The Rule
+
+**Always consult with the user before making architectural decisions or changing development patterns, even when facing challenges or errors.**
+
+### What Constitutes an Architectural Decision?
+
+- Changes to how data is stored or accessed
+- Modifications to configuration approaches
+- Introduction of new patterns or methodologies
+- Alterations to project structure
+- Changes that affect test strategy or philosophy
+- Introduction of new dependencies
+- Changes to error handling strategies
+- Modifications that affect more than one component
+
+### Proper Process
+
+1. **Identify the Issue**
+   - Clearly outline what problem you're encountering
+
+2. **Present Options**
+   - Provide at least 2-3 alternative approaches
+   - Include pros and cons of each option
+   - State implications for maintainability and compatibility
+
+3. **Make Recommendations**
+   - You may recommend an option, but clearly identify it as a recommendation
+   - Explain your reasoning, focusing on objective factors like maintainability, scalability, etc.
+
+4. **Wait for User Decision**
+   - Explicitly ask for direction before proceeding
+   - Don't make assumptions based on previous patterns without confirmation
+
+### Examples
+
+#### Inappropriate (Do Not Do This)
+
+"I encountered errors in the tests, so I changed all tests to use in-memory configuration."
+
+#### Appropriate Approach
+
+"I'm encountering errors in tests because they rely on credential files we've removed. Options are:
+1. Use in-memory configuration for all tests
+2. Restore credential files for testing only
+3. Create a hybrid approach with both methods
+
+I recommend option 3 because it allows isolated testing while retaining the ability to test with real databases. How would you like me to proceed?"
+
+### Benefits of This Rule
+
+- **Better Alignment**: Solutions align with the user's vision and needs
+- **Knowledge Transfer**: User understands why changes are made
+- **Reduced Rework**: Fewer instances of having to revert changes
+- **Shared Ownership**: Decisions are made collaboratively 

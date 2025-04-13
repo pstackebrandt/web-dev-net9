@@ -90,21 +90,36 @@ public partial class NorthwindContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            // Get configuration from appsettings.json
-            IConfiguration configuration = new ConfigurationBuilder()
+            // Build configuration with environment support and user secrets
+            var configBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
-                .Build();
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddUserSecrets<NorthwindContext>(optional: true); // Only loads in Development
 
-            // Create settings from configuration
-            var settings = new DatabaseConnectionSettings
+            IConfiguration configuration = configBuilder.Build();
+
+            // Create connection settings from configuration
+            var connectionSettings = new DatabaseConnectionSettings();
+            configuration.GetSection("DatabaseConnection").Bind(connectionSettings);
+            
+            // Get credentials from configuration (base or user secrets)
+            try
             {
-                UserID = configuration["Database:MY_SQL_USR"],
-                Password = configuration["Database:MY_SQL_PWD"]
-            };
+                connectionSettings.UserID = configuration["Database:MY_SQL_USR"] ?? 
+                    throw new InvalidOperationException("Database username not found in configuration");
+                connectionSettings.Password = configuration["Database:MY_SQL_PWD"] ?? 
+                    throw new InvalidOperationException("Database password not found in configuration");
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(
+                    "Database credentials are missing. If in development, ensure user secrets are configured. " +
+                    "See docs/user-secrets-setup.md for details.", ex);
+            }
 
-            // Validate and build connection string
-            var builder = DatabaseConnectionBuilder.CreateBuilder(settings);
+            // Build connection string
+            var builder = DatabaseConnectionBuilder.CreateBuilder(connectionSettings);
 
             optionsBuilder.UseSqlServer(builder.ConnectionString);
             optionsBuilder.LogTo(

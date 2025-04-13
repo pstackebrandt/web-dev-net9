@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore; // To use UseSqlServer.
 using Microsoft.Extensions.DependencyInjection; // To useIServiceCollection
 using Microsoft.Extensions.Configuration; // To use IConfiguration
 using Microsoft.Extensions.Options; // To use IOptions
+using Northwind.Shared.Configuration; // For DatabaseConnectionSettings and DatabaseConnectionBuilder
 
 namespace Northwind.EntityModels;
 public static class NorthwindContextExtensions
@@ -39,30 +40,27 @@ public static class NorthwindContextExtensions
                 throw new InvalidOperationException("Configuration service is not available");
             }
 
-            // Get database settings directly from configuration
-            var username = configuration["Database:MY_SQL_USR"];
-            var password = configuration["Database:MY_SQL_PWD"];
-
-            // Validate required settings
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            // Create connection settings from configuration
+            var connectionSettings = new DatabaseConnectionSettings();
+            configuration.GetSection("DatabaseConnection").Bind(connectionSettings);
+            
+            try
             {
-                throw new InvalidOperationException("Database credentials are missing in configuration");
+                // Get credentials from configuration (which includes user secrets in dev)
+                connectionSettings.UserID = configuration["Database:MY_SQL_USR"] ?? 
+                    throw new InvalidOperationException("Database username not found in configuration");
+                connectionSettings.Password = configuration["Database:MY_SQL_PWD"] ?? 
+                    throw new InvalidOperationException("Database password not found in configuration");
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(
+                    "Database credentials are missing. If in development, ensure user secrets are configured. " +
+                    "See docs/user-secrets-setup.md for details.", ex);
             }
 
-            SqlConnectionStringBuilder builder = new();
-            builder.DataSource = "tcp:127.0.0.1,1433"; // SQL Edge in Docker.
-            builder.InitialCatalog = "Northwind";
-            builder.TrustServerCertificate = true;
-            builder.MultipleActiveResultSets = true;
-
-            // Because we want to fail faster. Default is 15 seconds.
-            //Introducing Web Development Using Controllers
-            builder.ConnectTimeout = 3;
-
-            // SQL Server authentication.
-            // Get credentials from configuration
-            builder.UserID = username;
-            builder.Password = password;
+            // Build connection string
+            var builder = DatabaseConnectionBuilder.CreateBuilder(connectionSettings);
             connectionString = builder.ConnectionString;
         }
 
@@ -74,11 +72,11 @@ public static class NorthwindContextExtensions
                 new[] { Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuting }
             );
         },
-
         // Register with a transient lifetime to avoid concurrency
         // issues with Blazor Server projects.
         contextLifetime: ServiceLifetime.Transient,
         optionsLifetime: ServiceLifetime.Transient);
+        
         return services;
     }
 }

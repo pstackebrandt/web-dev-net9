@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Northwind.EntityModels;
+using Northwind.Shared.Configuration;
 using Xunit.Sdk;
 using Xunit;
 
@@ -11,7 +13,7 @@ namespace Northwind.UnitTests.Infrastructure;
 /// These tests help diagnose common infrastructure issues before
 /// running actual database tests.
 /// </summary>
-public class DockerDatabaseTests : TestBase
+public class DockerDatabaseTests : DatabaseTestBase
 {
     [Fact]
     public void DockerDesktopIsRunning()
@@ -43,32 +45,61 @@ public class DockerDatabaseTests : TestBase
         Assert.True(isContainerRunning, "SQL Server container is not running. Please start the container.");
     }
     
+    /// <summary>
+    /// Tests if a database connection can be established.
+    /// </summary>
+    /// <remarks>
+    /// Verifies basic connectivity without detailed diagnostics.
+    /// </remarks>
     [Fact]
-    public void DatabaseConnectionFailureReason()
+    public void CanConnectToDatabase()
     {
         using var context = CreateTestContext();
+        bool canConnect = context.Database.CanConnect();
+        Assert.True(canConnect, "Database connection failed");
+    }
+    
+    /// <summary>
+    /// Attempts to open a database connection and reports native error messages.
+    /// </summary>
+    /// <remarks>
+    /// Provides detailed SQL error information when connection fails.
+    /// Uses file-based configuration with user secrets.
+    /// </remarks>
+    [Fact]
+    public void OpenDatabaseConnection()
+    {
+        // Explicitly use file-based settings to ensure user secrets are used
+        var settings = GetFileBasedTestSettings();
+        var builder = DatabaseConnectionBuilder.CreateBuilder(settings);
+        
+        var options = new DbContextOptionsBuilder<NorthwindContext>()
+            .UseSqlServer(builder.ConnectionString)
+            .Options;
+            
+        using var context = new NorthwindContext(options);
+        
+        // Get connection string before attempting connection
+        var connectionString = context.Database.GetConnectionString();
+        // Create a copy that masks the password for safe display
+        var displayConnectionString = new SqlConnectionStringBuilder(connectionString)
+        {
+            //Password = "********" // Mask the password
+        }.ToString();
         
         try
         {
-            bool canConnect = context.Database.CanConnect();
-            Assert.True(canConnect, "Database connection succeeded");
+            context.Database.OpenConnection();
+            context.Database.CloseConnection();
+            Assert.True(true, "Database connection succeeded");
         }
         catch (SqlException ex)
         {
-            // First check Docker status
-            if (!IsDockerProcessRunning())
-            {
-                throw new XunitException($"Connection failed because Docker is not running. Error: {ex.Message}");
-            }
-            
-            // Then check container status
-            if (!IsSqlContainerRunning())
-            {
-                throw new XunitException($"Connection failed because SQL container is not running. Error: {ex.Message}");
-            }
-            
-            // If both are running, it's another issue
-            throw new XunitException($"Connection failed for another reason: {ex.Message}");
+            throw new XunitException(
+                $"Database connection failed: {ex.Message}\n" +
+                $"Error Number: {ex.Number}\n" +
+                $"Connection: {displayConnectionString}\n" + 
+                $"State: {ex.State}");
         }
     }
     

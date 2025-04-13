@@ -1,12 +1,13 @@
 ﻿using Northwind.EntityModels;
+using Northwind.UnitTests.Infrastructure;
 
 namespace Northwind.UnitTests;
 
 /// <summary>
 /// Tests for Northwind entity models and database access.
-/// Inherits from TestBase to use test-specific database configuration.
+/// Inherits from DatabaseTestBase to use file-based configuration for real database tests.
 /// </summary>
-public class EntityModelTests : TestBase
+public class EntityModelTests : DatabaseTestBase
 {
     [Fact]
     public void DatabaseConnectTest()

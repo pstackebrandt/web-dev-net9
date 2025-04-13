@@ -8,7 +8,8 @@ A guide for new team members on configuring database credentials securely using 
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
-  - [Setup Steps](#setup-steps)
+  - [Setup Steps for Main Application](#setup-steps-for-main-application)
+  - [Setup Steps for Tests](#setup-steps-for-tests)
   - [Verifying Your Configuration](#verifying-your-configuration)
   - [Troubleshooting](#troubleshooting)
 
@@ -23,7 +24,7 @@ environment to connect to databases.
 - .NET SDK 6.0 or later
 - Access to database credentials (contact your team lead)
 
-## Setup Steps
+## Setup Steps for Main Application
 
 1. Open a terminal in the solution root directory (`code/MatureWeb/`)
 
@@ -42,11 +43,32 @@ environment to connect to databases.
 
    Replace `your_actual_username` and `your_actual_password` with the actual database credentials.
 
-4. For test environment credentials (optional):
+## Setup Steps for Tests
+
+The test project uses the same connection settings and credentials as the main application, but must be configured separately:
+
+1. Open a terminal in the solution root directory (`code/MatureWeb/`)
+
+2. Initialize user secrets for the test project:
 
    ```bash
-   dotnet user-secrets set "Test:Database:MY_SQL_USR" "your_test_username" --project Northwind.DataContext
-   dotnet user-secrets set "Test:Database:MY_SQL_PWD" "your_test_password" --project Northwind.DataContext
+   dotnet user-secrets init --project Northwind.UnitTests
+   ```
+
+3. Add your database credentials for tests:
+
+   ```bash
+   dotnet user-secrets set "Database:MY_SQL_USR" "your_actual_username" --project Northwind.UnitTests
+   dotnet user-secrets set "Database:MY_SQL_PWD" "your_actual_password" --project Northwind.UnitTests
+   ```
+
+   For development and testing, you can use the same credentials as the main application.
+
+4. If using different credentials for testing (recommended for production databases):
+
+   ```bash
+   dotnet user-secrets set "Database:MY_SQL_USR" "your_test_username" --project Northwind.UnitTests
+   dotnet user-secrets set "Database:MY_SQL_PWD" "your_test_password" --project Northwind.UnitTests
    ```
 
 ## Verifying Your Configuration
@@ -62,8 +84,12 @@ You should see output like:
 ```
 Database:MY_SQL_USR = your_actual_username
 Database:MY_SQL_PWD = your_actual_password
-Test:Database:MY_SQL_USR = your_test_username
-Test:Database:MY_SQL_PWD = your_test_password
+```
+
+Similarly, verify test secrets:
+
+```bash
+dotnet user-secrets list --project Northwind.UnitTests
 ```
 
 ## Troubleshooting
@@ -72,5 +98,7 @@ Test:Database:MY_SQL_PWD = your_test_password
 - **Connection failures**: Verify credentials are correct
 - **IDE not recognizing secrets**: Restart your IDE
 - **Missing user-secrets-id**: Check if the project file contains a UserSecretsId element
+- **Test failures**: Ensure you've set up secrets for the test project
+- **Different configurations**: If a test is failing only on your machine, check that your user secrets match the expected values
 
 If you need further assistance, contact the development team lead.

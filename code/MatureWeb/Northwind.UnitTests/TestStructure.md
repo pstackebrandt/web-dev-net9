@@ -10,6 +10,7 @@ Northwind test projects.
   - [Folder Structure](#folder-structure)
   - [Additional Test Projects](#additional-test-projects)
   - [Organization Principles](#organization-principles)
+  - [Base Class Hierarchy](#base-class-hierarchy)
   - [Naming Conventions](#naming-conventions)
   - [Migration Plan](#migration-plan)
 
@@ -19,8 +20,10 @@ Northwind test projects.
 Northwind.UnitTests/
 ├── Infrastructure/         # Tests for config, connections, setup
 │   ├── TestDbConfigurationTests.cs    # Database configuration validation
-│   ├── DatabaseSetupTests.cs    # Database initialization tests
-│   └── ConnectionTests.cs       # Connection resilience tests
+│   ├── DatabaseTestBase.cs      # Base class for DB tests 
+│   ├── ConfigurationFileTestBase.cs   # Base class for config tests
+│   ├── DockerDatabaseTests.cs    # Docker and DB connection tests
+│   └── ConfigurationLoadingTests.cs   # Configuration loading tests
 ├── Repositories/           # Unit tests for data access logic
 │   ├── CustomerRepositoryTests.cs
 │   ├── ProductRepositoryTests.cs
@@ -59,6 +62,39 @@ Northwind.PerformanceTests/      # Optional load/performance tests
 3. `Infrastructure Tests`: Keep tests that verify configuration and setup
    in a dedicated folder.
 4. `Shared Test Utilities`: Common test code and helpers have their own location.
+
+## Base Class Hierarchy
+
+The test project uses a hierarchy of base classes to provide specialized functionality:
+
+```
+           ┌─────────┐
+           │ TestBase│
+           └────┬────┘
+                │
+     ┌──────────┴───────────┐
+     │                      │
+┌────┴─────┐       ┌────────┴──────────┐
+│DatabaseTestBase│ │ConfigurationFileTestBase│
+└──────────┘       └───────────────────┘
+```
+
+1. **TestBase**: Primary base class that provides:
+   - Basic test configuration (in-memory by default)
+   - Common context creation methods
+   - Shared test utilities
+
+2. **DatabaseTestBase**: For tests requiring real database connections:
+   - Overrides configuration to use file-based settings
+   - Expects database credentials in user secrets
+   - Use for entity model tests and data access tests
+
+3. **ConfigurationFileTestBase**: For tests verifying configuration loading:
+   - Provides utilities for testing configuration files
+   - Helps verify layered configuration behavior
+   - Use for configuration and settings tests
+
+See [Test Configuration Guide](../docs/test-configuration-guide.md) for detailed usage.
 
 ## Naming Conventions
 

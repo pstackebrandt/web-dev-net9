@@ -1,16 +1,35 @@
 # Test Infrastructure Refactoring Plan
 
 A checklist of tasks for improving the test infrastructure, focusing on consistency and separation of concerns.
+Last updated: After Docker restart.
 
 ## Table of Contents
 
 - [Test Infrastructure Refactoring Plan](#test-infrastructure-refactoring-plan)
   - [Table of Contents](#table-of-contents)
+  - [Immediate Infrastructure Fixes](#immediate-infrastructure-fixes)
   - [DockerDatabaseTests Consistency Issues](#dockerdatabasetests-consistency-issues)
   - [Test Base Classes Redesign](#test-base-classes-redesign)
   - [Documentation Updates](#documentation-updates)
   - [Testing and Verification](#testing-and-verification)
   - [Implementation Sequence](#implementation-sequence)
+
+## Immediate Infrastructure Fixes
+
+- [ ] Start and configure SQL Server container:
+  - [ ] Run `docker start sql` or equivalent command to start the container
+  - [ ] Verify SQL Server is accepting connections with `docker logs sql`
+  - [ ] Check port mapping with `docker port sql` to ensure 1433 is properly mapped
+  - [ ] Configure proper credentials to match test expectations
+
+- [ ] Configure user secrets for test project:
+  - [ ] Run `dotnet user-secrets init --project Northwind.UnitTests` if not already initialized
+  - [ ] Set database credentials with correct values:
+    ```bash
+    dotnet user-secrets set "Database:MY_SQL_USR" "sa" --project Northwind.UnitTests
+    dotnet user-secrets set "Database:MY_SQL_PWD" "YourStrongPassword" --project Northwind.UnitTests
+    ```
+  - [ ] Verify secrets are correctly set with `dotnet user-secrets list --project Northwind.UnitTests`
 
 ## DockerDatabaseTests Consistency Issues
 
@@ -68,13 +87,14 @@ A checklist of tasks for improving the test infrastructure, focusing on consiste
 
 ## Testing and Verification
 
-- [ ] Establish baseline before changes:
-  - [ ] Document currently passing and failing tests
-  - [ ] Record specific error messages for failing tests
+- [x] Establish baseline before changes:
+  - [x] Document currently passing and failing tests
+  - [x] Record specific error messages for failing tests
 
 - [ ] Implement verification after each refactoring stage:
+  - [ ] After SQL Server container and credential setup
   - [ ] After DockerDatabaseTests consistency changes
-  - [ ] After TestBase abstraction 
+  - [ ] After TestBase abstraction
   - [ ] After implementing new base classes
   - [ ] After migrating tests to new infrastructure
 
@@ -90,9 +110,11 @@ A checklist of tasks for improving the test infrastructure, focusing on consiste
 
 ## Implementation Sequence
 
-1. Start with the DockerDatabaseTests consistency fixes (minimal risk)
-2. Create the abstract base class structure but don't move existing tests yet
-3. Implement the new derived test base classes
-4. Gradually migrate existing tests to the new structure
-5. Update documentation to reflect changes
-6. Run all tests to ensure functionality is preserved
+1. Start SQL Server container and configure credentials
+2. Fix DbContext creation in Docker-related tests
+3. Continue with the DockerDatabaseTests consistency fixes
+4. Create the abstract base class structure but don't move existing tests yet
+5. Implement the new derived test base classes
+6. Gradually migrate existing tests to the new structure
+7. Update documentation to reflect changes
+8. Run all tests to ensure functionality is preserved

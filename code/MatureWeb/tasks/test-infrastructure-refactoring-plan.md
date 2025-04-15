@@ -1,7 +1,7 @@
 # Test Infrastructure Refactoring Plan
 
 A checklist of tasks for improving the test infrastructure, focusing on consistency and separation of concerns.
-Last updated: After Test Base Classes Redesign.
+Last updated: After Documentation Updates.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ Last updated: After Test Base Classes Redesign.
   - [Implementation Sequence](#implementation-sequence)
   - [Progress Notes](#progress-notes)
     - [DockerDatabaseTests Refactoring (Completed)](#dockerdatabasetests-refactoring-completed)
-    - [Documentation Updates (In Progress)](#documentation-updates-in-progress)
+    - [Documentation Updates (Completed)](#documentation-updates-completed)
     - [Test Base Classes Redesign (Completed)](#test-base-classes-redesign-completed)
 
 ## Immediate Infrastructure Fixes
@@ -54,7 +54,7 @@ Last updated: After Test Base Classes Redesign.
 
 ## Test Base Classes Redesign
 
-> **Note**: A detailed implementation plan for this section is available in [test-base-refactoring-plan.md](test-base-refactoring-plan.md).
+> **Note**: The implementation plan for this section was detailed in `test-base-refactoring-plan.md`, which has been archived after completion.
 
 - [x] Refactor `TestBase` into a true abstract base class:
   - [x] Move in-memory specific functionality out of TestBase
@@ -81,16 +81,18 @@ Last updated: After Test Base Classes Redesign.
 
 ## Documentation Updates
 
-- [ ] Update test documentation files:
-  - [x] Create `test-naming-conventions.md` with guidelines for naming test methods and classes
-  - [ ] Revise test-configuration-guide.md to reflect new class structure
-  - [ ] Update TestStructure.md with new inheritance diagram
-  - [ ] Add documentation on when to use each test base class
+> **Note**: A detailed documentation plan is available in [test-documentation-update-plan.md](test-documentation-update-plan.md).
 
-- [ ] Document design decisions:
-  - [ ] Create a document explaining the separation of concerns
-  - [ ] Include rationale for the inheritance hierarchy
-  - [ ] Document naming conventions chosen for tests
+- [x] Update test documentation files:
+  - [x] Create `test-naming-conventions.md` with guidelines for naming test methods and classes
+  - [x] Revise `test-configuration-guide.md` to reflect new class structure
+  - [x] Update `TestStructure.md` with new inheritance diagram
+  - [x] Add documentation on when to use each test base class
+
+- [x] Document design decisions:
+  - [x] Create a document explaining the separation of concerns
+  - [x] Include rationale for the inheritance hierarchy
+  - [x] Document naming conventions chosen for tests
 
 ## Testing and Verification
 
@@ -124,10 +126,9 @@ Last updated: After Test Base Classes Redesign.
 4. ✅ Document test naming conventions (completed)
 5. ✅ Rename tests in `DockerDatabaseTests.cs` (completed)
 6. ✅ Create the abstract base class structure (completed)
-   - ↳ See [test-base-refactoring-plan.md](test-base-refactoring-plan.md) for detailed steps
 7. ✅ Implement the new derived test base classes (completed)
 8. ✅ Gradually migrate existing tests to the new structure (completed)
-9. Update documentation to reflect changes
+9. ✅ Update documentation to reflect changes (completed)
 10. Run all tests to ensure functionality is preserved
 
 ## Progress Notes
@@ -139,11 +140,13 @@ Last updated: After Test Base Classes Redesign.
 - Ensured both tests use file-based settings consistently
 - Applied new naming convention `[MethodUnderTest]_[Scenario]_[ExpectedResult]` to all test methods in this class
 
-### Documentation Updates (In Progress)
+### Documentation Updates (Completed)
 - Created `test-naming-conventions.md` in the docs folder
 - Established consistent pattern for test method naming: `[MethodUnderTest]_[Scenario]_[ExpectedResult]`
 - Documented class naming convention with `Tests` suffix and folder organization recommendations
-- Created detailed implementation plan for test base classes redesign in `test-base-refactoring-plan.md`
+- Created merged `TestStructure.md` with inheritance diagram and comprehensive documentation
+- Updated `test-configuration-guide.md` with details on the new class structure
+- Verified `user-secrets-setup.md` is accurate and consistent with the refactored base classes
 
 ### Test Base Classes Redesign (Completed)
 - Refactored TestBase into a true abstract class with only shared functionality (BuildConfiguration and FindSolutionRoot)

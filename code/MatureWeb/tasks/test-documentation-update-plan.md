@@ -51,6 +51,6 @@ This plan outlines the necessary updates to documentation files following the re
 
 - **Goal**: Ensure the main plan accurately reflects the documentation tasks.
 - **Actions**:
-  - [ ] Update `tasks/test-infrastructure-refactoring-plan.md` to:
-    - Link to this detailed documentation plan.
-    - Mark relevant documentation tasks as in progress or complete as they are addressed.
+  - [x] Update `tasks/test-infrastructure-refactoring-plan.md` to:
+    - [x] Link to this detailed documentation plan.
+    - [x] Mark relevant documentation tasks as in progress or complete as they are addressed.

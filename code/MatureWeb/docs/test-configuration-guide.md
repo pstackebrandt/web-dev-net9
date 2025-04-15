@@ -12,6 +12,10 @@ A guide to the configuration approaches used in Northwind test projects.
   - [DatabaseTestBase](#databasetestbase)
   - [Choosing the Right Base Class](#choosing-the-right-base-class)
   - [Example Usage](#example-usage)
+  - [Test Categorization Examples](#test-categorization-examples)
+    - [Tests Using DatabaseTestBase](#tests-using-databasetestbase)
+    - [Tests for Configuration Settings](#tests-for-configuration-settings)
+    - [Tests Using InMemoryTestBase](#tests-using-inmemorytestbase)
   - [Troubleshooting Test Failures](#troubleshooting-test-failures)
     - [Database Connection Failures](#database-connection-failures)
     - [Configuration Loading Failures](#configuration-loading-failures)
@@ -19,7 +23,8 @@ A guide to the configuration approaches used in Northwind test projects.
 
 ## Overview of Test Base Classes
 
-The Northwind test project uses a hierarchy of base classes to provide common functionality and configuration for different types of tests. This structure promotes code reuse and ensures consistency.
+The Northwind test project uses a hierarchy of base classes to provide common functionality and
+configuration for different types of tests. This structure promotes code reuse and ensures consistency.
 
 - **TestBase**: An abstract base class providing core utilities.
 - **InMemoryTestBase**: Derived from TestBase, for tests using an in-memory database.
@@ -31,7 +36,8 @@ The Northwind test project uses a hierarchy of base classes to provide common fu
 
 - **Purpose**: Provides common, shared utilities needed by different test types.
 - **Key Functionality**:
-  - `BuildConfiguration()`: A static method that builds an `IConfigurationRoot` object by loading settings from `appsettings.json`, `appsettings.Testing.json`, and user secrets. This ensures consistent configuration loading.
+  - `BuildConfiguration()`: A static method that builds an `IConfigurationRoot` object by loading settings from
+    `appsettings.json`, `appsettings.Testing.json`, and user secrets. This ensures consistent configuration loading.
   - `FindSolutionRoot()`: A utility to locate the solution root directory, necessary for finding configuration files.
 - **Inheritance**: Both `InMemoryTestBase` and `DatabaseTestBase` inherit from `TestBase`.
 
@@ -42,22 +48,30 @@ The Northwind test project uses a hierarchy of base classes to provide common fu
 - **Purpose**: To facilitate unit tests that should run quickly and independently of external database resources.
 - **Inheritance**: Inherits from `TestBase`.
 - **Key Functionality**:
-  - `GetInMemoryTestSettings()`: Returns a `DatabaseConnectionSettings` object populated with hardcoded values suitable for basic testing, independent of configuration files.
-  - `CreateInMemoryContext()`: Creates a `NorthwindContext` instance configured to use the EF Core in-memory database provider. Each call generates a unique database name (e.g., `NorthwindTest_<GUID>`) to ensure test isolation.
+  - `GetInMemoryTestSettings()`: Returns a `DatabaseConnectionSettings` object populated with hardcoded values
+    suitable for basic testing, independent of configuration files.
+  - `CreateInMemoryContext()`: Creates a `NorthwindContext` instance configured to use the EF Core in-memory
+    database provider. Each call generates a unique database name (e.g., `NorthwindTest_<GUID>`) to ensure test isolation.
 - **Dependencies**: Requires the `Microsoft.EntityFrameworkCore.InMemory` NuGet package.
-- **Use Cases**: Ideal for testing business logic, validation rules, or components that interact with the `DbContext` without needing actual database persistence or features.
+- **Use Cases**: Ideal for testing business logic, validation rules, or components that interact with the `DbContext`
+  without needing actual database persistence or features.
 
 ## DatabaseTestBase
 
-`DatabaseTestBase` is used for tests that need to interact with a real, configured database (typically SQL Server running in Docker for this project).
+`DatabaseTestBase` is used for tests that need to interact with a real, configured database
+(typically SQL Server running in Docker for this project).
 
 - **Purpose**: To enable integration tests that verify database connectivity, entity mappings, and SQL-specific behavior.
 - **Inheritance**: Inherits from `TestBase`.
 - **Key Functionality**:
-  - `GetFileBasedTestSettings()`: Retrieves `DatabaseConnectionSettings` by calling `BuildConfiguration()` from `TestBase` and extracting necessary values (connection string components, user ID, password) from the loaded configuration.
-  - `CreateDatabaseContext()`: Creates a `NorthwindContext` instance configured to connect to the database specified in the configuration files and user secrets (using `UseSqlServer`).
-- **Dependencies**: Relies on correctly configured `appsettings.Testing.json` and user secrets for database credentials. Requires the database server (e.g., SQL Server Docker container) to be running and accessible.
-- **Use Cases**: Essential for testing database migrations, repository logic involving complex queries, end-to-end scenarios, and verifying interactions with the actual database schema.
+  - `GetFileBasedTestSettings()`: Retrieves `DatabaseConnectionSettings` by calling `BuildConfiguration()` from
+    `TestBase` and extracting necessary values (connection string components, user ID, password) from the loaded configuration.
+  - `CreateDatabaseContext()`: Creates a `NorthwindContext` instance configured to connect to the database
+    specified in the configuration files and user secrets (using `UseSqlServer`).
+- **Dependencies**: Relies on correctly configured `appsettings.Testing.json` and user secrets for database credentials.
+  Requires the database server (e.g., SQL Server Docker container) to be running and accessible.
+- **Use Cases**: Essential for testing database migrations, repository logic involving complex queries,
+  end-to-end scenarios, and verifying interactions with the actual database schema.
 
 ## Choosing the Right Base Class
 
@@ -101,6 +115,46 @@ public class EntityModelTests : DatabaseTestBase
 }
 ```
 
+## Test Categorization Examples
+
+The following existing tests demonstrate when to use each base class type:
+
+### Tests Using DatabaseTestBase
+
+These tests require an actual connection to a real database and should use settings files and user secrets:
+
+1. **EntityModelTests**:
+   - `DatabaseConnectTest` - Tests actual database connection
+   - `CategoriesCountTest` - Tests querying real data
+   - `ProductId1IsChaiTest` - Tests retrieving a specific product
+
+2. **DockerDatabaseTests**:
+   - `VerifyDatabaseConnection_WithValidCredentials_Succeeds` - Tests database connection
+   - `OpenDbConnection_WithValidCredentials_Succeeds` - Tests database connection
+
+### Tests for Configuration Settings
+
+These tests verify that connection strings are properly created from external configuration:
+
+1. **TestDbConfigurationTests**:
+   - `GetTestSettings_LoadsCorrectDatabaseName` - Verifies database name from settings
+   - `GetTestSettings_LoadsCorrectTimeout` - Verifies timeout value from settings
+   - `GetTestSettings_LoadsDatabaseUserName` - Verifies username loading
+   - `GetTestSettings_LoadsDBUserNamePassword` - Verifies password loading
+   - `FileBasedConfiguration_LoadsCorrectly` - Verifies configuration file loading
+   - `ConnectionString_UsesTestCredentials` - Verifies credentials in connection string
+
+### Tests Using InMemoryTestBase
+
+These tests verify configuration behavior without needing a real database connection:
+
+1. **ConfigurationLoadingTests**:
+   - `Environment_SpecificSettings_OverrideBaseSettings` - Tests environment-specific overrides
+   - `NorthwindContextExtensions_UsesConnectionSettingsFromConfiguration` - Tests DI configuration
+   - `Missing_Credentials_ThrowsInformativeException` - Tests error handling
+2. **InMemoryConfigurationTests**:
+   - `InMemoryConfiguration_WorksCorrectly` - Verifies in-memory database configuration
+
 ## Troubleshooting Test Failures
 
 Common issues and solutions:
@@ -117,12 +171,15 @@ Common issues and solutions:
 
 - **Missing files**: Ensure `appsettings.json` & `appsettings.Testing.json` exist at the solution root.
 - **Format errors**: Check JSON syntax in configuration files.
-- **User secrets**: Check if required user secrets (`Database:MY_SQL_USR`, `Database:MY_SQL_PWD`) are set for the `Northwind.UnitTests` project.
+- **User secrets**: Check if required user secrets (`Database:MY_SQL_USR`, `Database:MY_SQL_PWD`) are set
+  for the `Northwind.UnitTests` project.
 
 ### Test Execution Environment
 
-- **Wrong environment**: While less critical now for base class selection, ensure environment variables aren't causing unexpected configuration issues.
-- **Missing packages**: Ensure `Microsoft.EntityFrameworkCore.InMemory` is installed for `InMemoryTestBase` tests and `Microsoft.EntityFrameworkCore.SqlServer` for `DatabaseTestBase` tests.
+- **Wrong environment**: While less critical now for base class selection, ensure environment variables
+  aren't causing unexpected configuration issues.
+- **Missing packages**: Ensure `Microsoft.EntityFrameworkCore.InMemory` is installed for `InMemoryTestBase` tests
+  and `Microsoft.EntityFrameworkCore.SqlServer` for `DatabaseTestBase` tests.
 
 When a test fails with a message about missing credentials, run:
 

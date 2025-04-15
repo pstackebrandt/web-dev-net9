@@ -1,6 +1,10 @@
 # Test Categorization
 
-This document categorizes the tests in the Northwind project based on their requirements for database access and configuration.
+**STATUS: DEPRECATED** - This planning document is no longer needed. The information has been:
+1. Implemented in the codebase through proper inheritance hierarchies
+2. Documented in `docs/test-configuration-guide.md` under the "Test Categorization Examples" section
+
+This file can be safely deleted.
 
 ## A) Tests Requiring Real Database
 

@@ -1,117 +1,51 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Northwind.EntityModels;
-using Northwind.Shared.Configuration;
 
 namespace Northwind.UnitTests;
 
 /// <summary>
-/// Base class for Northwind database tests providing common functionality
-/// for database context creation and configuration.
+/// Abstract base class for Northwind tests providing common functionality
+/// for test configuration.
 /// </summary>
 /// <remarks>
 /// This class:
-/// - Provides centralized test database configuration
-/// - Handles test-specific connection settings
-/// - Ensures consistent database context setup across all tests
-/// - Supports both in-memory and file-based configuration
+/// - Provides centralized test configuration building
+/// - Contains only functionality common to all test types
+/// - Serves as a foundation for specialized test base classes
 /// </remarks>
 public abstract class TestBase
 {
     /// <summary>
-    /// Retrieves database connection settings from test configuration.
+    /// Builds a configuration object from standard configuration sources.
     /// </summary>
-    /// <returns>Database connection settings configured for testing.</returns>
-    /// <remarks>
-    /// This method defaults to in-memory configuration for most tests.
-    /// Override in derived classes to use file-based configuration when needed.
-    /// </remarks>
-    protected static DatabaseConnectionSettings GetTestSettings()
-    {
-        return GetInMemoryTestSettings();
-    }
-
-    /// <summary>
-    /// Retrieves database connection settings from in-memory test configuration.
-    /// </summary>
-    /// <returns>Database connection settings configured for testing.</returns>
-    /// <remarks>
-    /// This method creates an in-memory configuration with test values
-    /// instead of relying on physical configuration files.
-    /// </remarks>
-    protected static DatabaseConnectionSettings GetInMemoryTestSettings()
-    {
-        // Create in-memory test configuration
-        var configValues = new Dictionary<string, string?>
-        {
-            { "DatabaseConnection:DataSource", "tcp:127.0.0.1,1433" },
-            { "DatabaseConnection:InitialCatalog", "Northwind" },
-            { "DatabaseConnection:TrustServerCertificate", "true" },
-            { "DatabaseConnection:MultipleActiveResultSets", "true" },
-            { "DatabaseConnection:ConnectTimeout", "1" }, // Testing timeout value
-            { "Database:MY_SQL_USR", "sa" },
-            { "Database:MY_SQL_PWD", "Password123!" } // Test password, not a real one
-        };
-
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(configValues)
-            .Build();
-
-        var settings = new DatabaseConnectionSettings();
-        configuration.GetSection("DatabaseConnection").Bind(settings);
-
-        // Set credentials from configuration
-        settings.UserID = configuration["Database:MY_SQL_USR"] ??
-            throw new InvalidOperationException("Database username not found in configuration");
-        settings.Password = configuration["Database:MY_SQL_PWD"] ??
-            throw new InvalidOperationException("Database password not found in configuration");
-
-        return settings;
-    }
-
-    /// <summary>
-    /// Retrieves database connection settings from file-based configuration.
-    /// </summary>
-    /// <returns>Database connection settings from config files.</returns>
+    /// <returns>A built IConfigurationRoot object.</returns>
     /// <remarks>
     /// Uses standard .NET layered configuration approach with:
     /// - Base appsettings.json
-    /// - Environment-specific settings
+    /// - Environment-specific settings (appsettings.Testing.json)
     /// - User secrets for sensitive data
     /// </remarks>
-    protected static DatabaseConnectionSettings GetFileBasedTestSettings()
+    protected static IConfigurationRoot BuildConfiguration()
     {
         string solutionRoot = FindSolutionRoot();
         
         try
         {
-            var configuration = new ConfigurationBuilder()
+            return new ConfigurationBuilder()
                 .SetBasePath(solutionRoot)
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddJsonFile("appsettings.Testing.json", optional: false)
                 .AddUserSecrets<NorthwindContext>(optional: true)
                 .Build();
-
-            var settings = new DatabaseConnectionSettings();
-            configuration.GetSection("DatabaseConnection").Bind(settings);
-
-            // Set credentials from configuration
-            settings.UserID = configuration["Database:MY_SQL_USR"] ?? 
-                throw new InvalidOperationException("Database username not found in configuration");
-            settings.Password = configuration["Database:MY_SQL_PWD"] ?? 
-                throw new InvalidOperationException("Database password not found in configuration");
-
-            return settings;
         }
         catch (Exception ex)
         {
             throw new InvalidOperationException(
-                "Database credentials are missing. If in development, ensure user secrets are configured. " +
-                "See docs/user-secrets-setup.md for details.", ex);
+                "Configuration could not be loaded. " +
+                "See docs/test-configuration-guide.md for details.", ex);
         }
     }
 
@@ -125,6 +59,8 @@ public abstract class TestBase
     /// </remarks>
     protected static string FindSolutionRoot()
     {
+        // TODO: Do we need this function in TestBase.cs. It looks like it may be useful in different cases and would better be placed in a more general utility class.
+
         // Start with the directory of the executing assembly
         string? currentDir = Path.GetDirectoryName(
             Assembly.GetExecutingAssembly().Location);
@@ -162,29 +98,5 @@ public abstract class TestBase
 
         throw new InvalidOperationException(
             "Could not find solution root. Solution file (.sln) not found in any parent directory.");
-    }
-
-    /// <summary>
-    /// Creates a new instance of NorthwindContext configured for testing.
-    /// </summary>
-    /// <returns>A NorthwindContext instance ready for testing.</returns>
-    /// <remarks>
-    /// This method:
-    /// - Gets test-specific database settings
-    /// - Builds connection string using shared configuration
-    /// - Creates context with test configuration
-    /// 
-    /// Use this method in tests that need database access.
-    /// </remarks>
-    protected static NorthwindContext CreateTestContext()
-    {
-        var settings = GetTestSettings();
-        var builder = DatabaseConnectionBuilder.CreateBuilder(settings);
-
-        var options = new DbContextOptionsBuilder<NorthwindContext>()
-            .UseSqlServer(builder.ConnectionString)
-            .Options;
-
-        return new NorthwindContext(options);
     }
 }

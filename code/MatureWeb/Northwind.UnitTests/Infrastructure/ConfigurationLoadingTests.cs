@@ -10,9 +10,17 @@ namespace Northwind.UnitTests.Infrastructure;
 
 /// <summary>
 /// Tests for the enhanced configuration loading capabilities.
-/// These tests verify the proper behavior of environment-specific configuration,
-/// user secrets integration, and error handling for missing credentials.
 /// </summary>
+/// <remarks>
+/// This test class focuses on application-level configuration mechanisms:
+/// - Properly handling environment-specific configuration
+/// - Dependency injection for database context
+/// - User secrets integration
+/// - Error handling for missing credentials
+/// 
+/// Note: This class intentionally doesn't inherit from TestBase or its derived classes
+/// as it tests the configuration mechanisms directly, not database context behavior.
+/// </remarks>
 public class ConfigurationLoadingTests
 {
     // Constants for configuration keys
@@ -22,6 +30,10 @@ public class ConfigurationLoadingTests
     /// <summary>
     /// Tests that environment-specific settings correctly override base settings.
     /// </summary>
+    /// <remarks>
+    /// Verifies that configuration values from the Testing environment
+    /// properly override values from the base configuration.
+    /// </remarks>
     [Fact]
     public void Environment_SpecificSettings_OverrideBaseSettings()
     {
@@ -73,6 +85,12 @@ public class ConfigurationLoadingTests
     /// <summary>
     /// Tests that the DI extension method correctly handles configuration.
     /// </summary>
+    /// <remarks>
+    /// Verifies that the AddNorthwindContext extension method correctly:
+    /// - Reads configuration from the provided IConfiguration
+    /// - Configures the DbContext with the right connection settings
+    /// - Makes the context available through the service provider
+    /// </remarks>
     [Fact]
     public void NorthwindContextExtensions_UsesConnectionSettingsFromConfiguration()
     {
@@ -113,6 +131,12 @@ public class ConfigurationLoadingTests
     /// <summary>
     /// Tests that appropriate error is thrown when credentials are missing.
     /// </summary>
+    /// <remarks>
+    /// Verifies that when database credentials are missing from configuration:
+    /// - An informative exception is thrown
+    /// - The error message includes a reference to user secrets
+    /// - The exception is of the expected type (InvalidOperationException)
+    /// </remarks>
     [Fact]
     public void Missing_Credentials_ThrowsInformativeException()
     {

@@ -8,20 +8,20 @@ using System.IO;
 using System.Collections.Generic;
 using Northwind.UnitTests.Infrastructure;
 
-namespace Northwind.UnitTests;
+namespace Northwind.UnitTests.Infrastructure;
 
 /// <summary>
 /// This are tests to check the configuration settings for the test database.
 /// The tests verify that the settings are loaded correctly from the configuration file
 /// and that the database context is created with the expected settings.
 /// </summary>
-public class TestDbConfigurationTests : ConfigurationFileTestBase
+public class TestDbConfigurationTests : DatabaseTestBase
 {
     [Fact]
     public void GetTestSettings_LoadsCorrectDatabaseName()
     {
         // Act
-        var settings = GetTestSettings();
+        var settings = GetFileBasedTestSettings();
 
         // Assert
         Assert.Equal("Northwind", settings.InitialCatalog);
@@ -31,7 +31,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void GetTestSettings_LoadsCorrectTimeout()
     {
         // Act
-        var settings = GetTestSettings();
+        var settings = GetFileBasedTestSettings();
 
         // Assert
         Assert.Equal(1, settings.ConnectTimeout);
@@ -41,7 +41,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void GetTestSettings_LoadsDatabaseUserName()
     {
         // Act
-        var settings = GetTestSettings();
+        var settings = GetFileBasedTestSettings();
 
         // Assert
         Assert.False(string.IsNullOrEmpty(settings.UserID));
@@ -52,7 +52,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void GetTestSettings_LoadsDBUserNamePassword()
     {
         // Act
-        var settings = GetTestSettings();
+        var settings = GetFileBasedTestSettings();
 
         // Assert
         Assert.False(string.IsNullOrEmpty(settings.UserID));
@@ -63,7 +63,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void CreateTestContext_UsesTestDatabase()
     {
         // Act
-        using  NorthwindContext? context = CreateTestContext();
+        using NorthwindContext? context = CreateDatabaseContext();
         var connectionString = context.Database.GetConnectionString();
 
         // Parse connection string to extract properties
@@ -77,7 +77,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void CreateTestContext_UsesTestTimeout()
     {
         // Act
-        using NorthwindContext? context = CreateTestContext();
+        using NorthwindContext? context = CreateDatabaseContext();
 
         var connectionString = context.Database.GetConnectionString();
 
@@ -107,28 +107,6 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
         Assert.Equal("Northwind", builder.InitialCatalog);
         Assert.Equal(1, builder.ConnectTimeout);
         Assert.False(string.IsNullOrEmpty(builder.UserID));
-        Assert.False(string.IsNullOrEmpty(builder.Password));
-    }
-
-    [Fact]
-    public void InMemoryConfiguration_WorksCorrectly()
-    {
-        // Act
-        var settings = GetInMemoryTestSettings();
-
-        // Assert
-        Assert.Equal("Northwind", settings.InitialCatalog);
-        Assert.Equal(1, settings.ConnectTimeout);
-        Assert.Equal("sa", settings.UserID);
-        Assert.False(string.IsNullOrEmpty(settings.Password));
-        
-        // Verify the connection string builds correctly
-        var connectionString = DatabaseConnectionBuilder.CreateBuilder(settings).ConnectionString;
-        var builder = new SqlConnectionStringBuilder(connectionString);
-        
-        Assert.Equal("Northwind", builder.InitialCatalog);
-        Assert.Equal(1, builder.ConnectTimeout);
-        Assert.Equal("sa", builder.UserID);
         Assert.False(string.IsNullOrEmpty(builder.Password));
     }
 
@@ -191,7 +169,7 @@ public class TestDbConfigurationTests : ConfigurationFileTestBase
     public void ConnectionString_UsesTestCredentials()
     {
         // Act
-        using  NorthwindContext? context = CreateTestContext();
+        using NorthwindContext? context = CreateDatabaseContext();
         var connectionString = context.Database.GetConnectionString();
 
         // Parse connection string to extract properties

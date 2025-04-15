@@ -6,111 +6,97 @@ A guide to the configuration approaches used in Northwind test projects.
 
 - [Test Configuration Guide](#test-configuration-guide)
   - [Table of Contents](#table-of-contents)
-  - [Configuration Approaches Overview](#configuration-approaches-overview)
-  - [In-Memory Configuration](#in-memory-configuration)
-  - [File-Based Configuration](#file-based-configuration)
-  - [Choosing the Right Approach](#choosing-the-right-approach)
-  - [Specialized Test Base Classes](#specialized-test-base-classes)
+  - [Overview of Test Base Classes](#overview-of-test-base-classes)
+  - [TestBase (Abstract)](#testbase-abstract)
+  - [InMemoryTestBase](#inmemorytestbase)
+  - [DatabaseTestBase](#databasetestbase)
+  - [Choosing the Right Base Class](#choosing-the-right-base-class)
+  - [Example Usage](#example-usage)
   - [Troubleshooting Test Failures](#troubleshooting-test-failures)
     - [Database Connection Failures](#database-connection-failures)
     - [Configuration Loading Failures](#configuration-loading-failures)
     - [Test Execution Environment](#test-execution-environment)
 
-## Configuration Approaches Overview
+## Overview of Test Base Classes
 
-The Northwind test suite supports two configuration approaches:
+The Northwind test project uses a hierarchy of base classes to provide common functionality and configuration for different types of tests. This structure promotes code reuse and ensures consistency.
 
-1. **In-Memory Configuration**: Default approach that doesn't rely on external files
-2. **File-Based Configuration**: Uses the same .NET layered configuration as the main application
+- **TestBase**: An abstract base class providing core utilities.
+- **InMemoryTestBase**: Derived from TestBase, for tests using an in-memory database.
+- **DatabaseTestBase**: Derived from TestBase, for tests requiring a real database connection.
 
-This dual approach ensures tests can run in both isolated and real-world scenarios.
+## TestBase (Abstract)
 
-## In-Memory Configuration
+`TestBase` serves as the foundation for other test base classes. It is declared `abstract` and cannot be used directly.
 
-In-memory configuration is the default approach and offers several advantages:
+- **Purpose**: Provides common, shared utilities needed by different test types.
+- **Key Functionality**:
+  - `BuildConfiguration()`: A static method that builds an `IConfigurationRoot` object by loading settings from `appsettings.json`, `appsettings.Testing.json`, and user secrets. This ensures consistent configuration loading.
+  - `FindSolutionRoot()`: A utility to locate the solution root directory, necessary for finding configuration files.
+- **Inheritance**: Both `InMemoryTestBase` and `DatabaseTestBase` inherit from `TestBase`.
 
-- **Independence**: Tests don't rely on configuration files
-- **Isolation**: Each test runs with a predictable configuration
-- **Simplicity**: No need to set up user secrets for basic tests
-- **CI/CD friendly**: Works in automated build environments without special setup
+## InMemoryTestBase
 
-This approach uses hardcoded values suitable for testing:
+`InMemoryTestBase` is designed for tests that need an isolated, in-memory database environment.
+
+- **Purpose**: To facilitate unit tests that should run quickly and independently of external database resources.
+- **Inheritance**: Inherits from `TestBase`.
+- **Key Functionality**:
+  - `GetInMemoryTestSettings()`: Returns a `DatabaseConnectionSettings` object populated with hardcoded values suitable for basic testing, independent of configuration files.
+  - `CreateInMemoryContext()`: Creates a `NorthwindContext` instance configured to use the EF Core in-memory database provider. Each call generates a unique database name (e.g., `NorthwindTest_<GUID>`) to ensure test isolation.
+- **Dependencies**: Requires the `Microsoft.EntityFrameworkCore.InMemory` NuGet package.
+- **Use Cases**: Ideal for testing business logic, validation rules, or components that interact with the `DbContext` without needing actual database persistence or features.
+
+## DatabaseTestBase
+
+`DatabaseTestBase` is used for tests that need to interact with a real, configured database (typically SQL Server running in Docker for this project).
+
+- **Purpose**: To enable integration tests that verify database connectivity, entity mappings, and SQL-specific behavior.
+- **Inheritance**: Inherits from `TestBase`.
+- **Key Functionality**:
+  - `GetFileBasedTestSettings()`: Retrieves `DatabaseConnectionSettings` by calling `BuildConfiguration()` from `TestBase` and extracting necessary values (connection string components, user ID, password) from the loaded configuration.
+  - `CreateDatabaseContext()`: Creates a `NorthwindContext` instance configured to connect to the database specified in the configuration files and user secrets (using `UseSqlServer`).
+- **Dependencies**: Relies on correctly configured `appsettings.Testing.json` and user secrets for database credentials. Requires the database server (e.g., SQL Server Docker container) to be running and accessible.
+- **Use Cases**: Essential for testing database migrations, repository logic involving complex queries, end-to-end scenarios, and verifying interactions with the actual database schema.
+
+## Choosing the Right Base Class
+
+| Inherit from `InMemoryTestBase` when... | Inherit from `DatabaseTestBase` when...       |
+| --------------------------------------- | --------------------------------------------- |
+| Testing logic independent of database   | Testing actual database connectivity          |
+| Needing fast, isolated tests            | Testing entity mappings against schema        |
+| Running tests in CI/CD easily           | Testing repository logic / complex queries    |
+| Unit testing services or controllers    | Testing database-specific features/functions  |
+| Avoiding external dependencies          | Need data persistence between test operations |
+
+## Example Usage
 
 ```csharp
-var configValues = new Dictionary<string, string>
+// Example: Test using in-memory database
+public class ProductServiceTests : InMemoryTestBase
 {
-    { "DatabaseConnection:DataSource", "tcp:127.0.0.1,1433" },
-    { "DatabaseConnection:InitialCatalog", "Northwind" },
-    { "DatabaseConnection:ConnectTimeout", "1" }, // Testing timeout value
-    { "Database:MY_SQL_USR", "sa" },
-    { "Database:MY_SQL_PWD", "Password123!" } // Test password, not a real one
-};
-```
+    [Fact]
+    public void AddProduct_WithValidData_Succeeds()
+    {
+        using var context = CreateInMemoryContext();
+        var service = new ProductService(context);
+        
+        // Act: Add a product
+        service.AddProduct(/* ... */);
+        
+        // Assert: Verify product was added in memory
+        Assert.Equal(1, context.Products.Count());
+    }
+}
 
-## File-Based Configuration
-
-File-based configuration matches how the main application loads settings:
-
-- **Real-world testing**: Tests with actual database connections
-- **Configuration verification**: Tests that verify configuration loading
-- **User secrets integration**: Securely accesses credentials
-- **Layered approach**: Base settings + environment-specific overrides
-
-This approach uses:
-
-- `appsettings.json`: Base configuration
-- `appsettings.Testing.json`: Test-specific overrides
-- `User Secrets`: Credentials for database access
-
-## Choosing the Right Approach
-
-| Use In-Memory Configuration when...   | Use File-Based Configuration when...        |
-| ------------------------------------- | ------------------------------------------- |
-| You need isolation from environment   | You need to test with a real database       |
-| Running in CI/CD pipelines            | Testing configuration loading mechanisms    |
-| Writing unit tests for business logic | Testing database connections                |
-| You want faster test execution        | Testing with actual credentials             |
-| Testing error handling                | Tests depend on environment-specific values |
-
-## Specialized Test Base Classes
-
-The test project provides specialized base classes for each approach:
-
-- **TestBase**: Base class with default in-memory configuration
-  - Use for most unit tests that don't require a real database
-
-- **DatabaseTestBase**: Uses file-based configuration for database tests
-  - Inherits from TestBase
-  - Override of GetTestSettings() to use file-based configuration
-  - Use for tests that need to connect to a real database
-
-- **ConfigurationFileTestBase**: Utilities for testing configuration files
-  - Inherits from TestBase
-  - Additional methods for configuration file testing
-  - Use for tests that verify configuration loading
-
-Example usage:
-
-```csharp
-// Tests that need real database
+// Example: Test using real database
 public class EntityModelTests : DatabaseTestBase
 {
     [Fact]
     public void DatabaseConnectTest()
     {
-        using NorthwindContext db = CreateTestContext();
+        using NorthwindContext db = CreateDatabaseContext();
         Assert.True(db.Database.CanConnect());
-    }
-}
-
-// Tests that verify configuration
-public class ConfigTests : ConfigurationFileTestBase
-{
-    [Fact]
-    public void FileBasedConfiguration_LoadsCorrectly()
-    {
-        var settings = GetFileBasedTestSettings();
-        Assert.Equal("Northwind", settings.InitialCatalog);
     }
 }
 ```
@@ -121,30 +107,28 @@ Common issues and solutions:
 
 ### Database Connection Failures
 
-- **Docker not running**: Start Docker Desktop
-- **SQL Server container not running**: Run `docker start sql`
-- **Wrong credentials**: Check user secrets are set up correctly
-- **Connection timeout**: May indicate server is unreachable
-- **Authentication failure**: Verify credentials in user secrets
+- **Docker not running**: Start Docker Desktop.
+- **SQL Server container not running**: Run `docker start sql`.
+- **Wrong credentials**: Check user secrets are set up correctly ([User Secrets Setup Guide](user-secrets-setup.md)).
+- **Connection timeout**: May indicate server is unreachable or firewall issue.
+- **Authentication failure**: Verify credentials in user secrets match the database setup.
 
 ### Configuration Loading Failures
 
-- **Missing files**: Ensure appsettings.json/appsettings.Testing.json exist
-- **Format errors**: Check JSON syntax in configuration files
-- **Path issues**: Verify FindSolutionRoot() is working correctly
-- **User secrets**: Check if required user secrets are set
+- **Missing files**: Ensure `appsettings.json` & `appsettings.Testing.json` exist at the solution root.
+- **Format errors**: Check JSON syntax in configuration files.
+- **User secrets**: Check if required user secrets (`Database:MY_SQL_USR`, `Database:MY_SQL_PWD`) are set for the `Northwind.UnitTests` project.
 
 ### Test Execution Environment
 
-- **Wrong environment**: Set ASPNETCORE_ENVIRONMENT to "Testing"
-- **Base class issues**: Ensure you're using the right test base class
-- **Missing resources**: Check if test requires specific external resources
+- **Wrong environment**: While less critical now for base class selection, ensure environment variables aren't causing unexpected configuration issues.
+- **Missing packages**: Ensure `Microsoft.EntityFrameworkCore.InMemory` is installed for `InMemoryTestBase` tests and `Microsoft.EntityFrameworkCore.SqlServer` for `DatabaseTestBase` tests.
 
 When a test fails with a message about missing credentials, run:
 
 ```bash
 dotnet user-secrets set "Database:MY_SQL_USR" "your_test_username" --project Northwind.UnitTests
-dotnet user-secrets set "Database:MY_SQL_PWD" "your_test_password" --project Norhwind.UnitTests
+dotnet user-secrets set "Database:MY_SQL_PWD" "your_test_password" --project Northwind.UnitTests
 ```
 
-See [User Secrets Setup Guide](user-secrets-setup.md) for detailed instructions. 
+See [User Secrets Setup Guide](user-secrets-setup.md) for detailed instructions.

@@ -12,14 +12,14 @@ public class EntityModelTests : DatabaseTestBase
     [Fact]
     public void DatabaseConnectTest()
     {
-        using NorthwindContext db = CreateTestContext();
+        using NorthwindContext db = CreateDatabaseContext();
         Assert.True(db.Database.CanConnect());
     }
 
     [Fact]
     public void CategoriesCountTest()
     {
-        using NorthwindContext db = CreateTestContext();
+        using NorthwindContext db = CreateDatabaseContext();
         int expected = 8;
         int actual = db.Categories.Count();
         Assert.Equal(expected, actual);
@@ -28,7 +28,7 @@ public class EntityModelTests : DatabaseTestBase
     [Fact]
     public void ProductId1IsChaiTest()
     {
-        using NorthwindContext db = CreateTestContext();
+        using NorthwindContext db = CreateDatabaseContext();
         string expected = "Chai";
         Product? product = db.Products.Find(keyValues: 1);
         string actual = product?.ProductName ?? string.Empty;

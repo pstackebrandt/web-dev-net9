@@ -4,6 +4,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="For EF Core.">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3" />

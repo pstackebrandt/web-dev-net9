@@ -36,16 +36,16 @@ This plan outlines the necessary updates to documentation files following the re
 
 - **Goal**: Clean up temporary planning documents.
 - **Actions**:
-  - [ ] Review `tasks/test-base-refactoring-plan.md`.
-  - [ ] Decide if key rationale/decisions should be moved to a more permanent design decisions document (e.g., a new `docs/test-design-decisions.md`).
-  - [ ] If summarized elsewhere or deemed unnecessary, archive or remove `tasks/test-base-refactoring-plan.md`.
+  - [x] Review `tasks/test-base-refactoring-plan.md`.
+  - [x] Decide if key rationale/decisions should be moved to a more permanent design decisions document (e.g., a new `docs/test-design-decisions.md`).
+  - [x] If summarized elsewhere or deemed unnecessary, archive or remove `tasks/test-base-refactoring-plan.md`.
 
 ## 4. Review `user-secrets-setup.md`
 
 - **Goal**: Ensure user secrets instructions are still accurate.
 - **Actions**:
-  - [ ] Quickly review the steps in `docs/user-secrets-setup.md`.
-  - [ ] Confirm accuracy, especially regarding how `DatabaseTestBase` utilizes configuration built by `TestBase`.
+  - [x] Quickly review the steps in `docs/user-secrets-setup.md`.
+  - [x] Confirm accuracy, especially regarding how `DatabaseTestBase` utilizes configuration built by `TestBase`.
 
 ## 5. Update Main Refactoring Plan
 

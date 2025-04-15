@@ -1,6 +1,6 @@
 # Test Project Structure
 
-This document outlines the test structure for the Northwind project, including the folder organization, base class \
+This document outlines the test structure for the Northwind project, including the folder organization, base class
 hierarchy, and naming conventions.
 
 ## Table of Contents
@@ -12,6 +12,7 @@ hierarchy, and naming conventions.
   - [Organization Principles](#organization-principles)
   - [Base Class Hierarchy](#base-class-hierarchy)
   - [Class Descriptions](#class-descriptions)
+  - [Design Decisions](#design-decisions)
   - [Naming Conventions](#naming-conventions)
   - [Migration Plan](#migration-plan)
 
@@ -82,7 +83,7 @@ graph TD
 
 - **`TestBase` (abstract)**
   - The fundamental abstract base class for all tests.
-  - Provides common configuration loading capabilities via the `BuildConfiguration` method, ensuring consistent access \
+  - Provides common configuration loading capabilities via the `BuildConfiguration` method, ensuring consistent access
   to application settings (like `appsettings.json` and user secrets).
 
 - **`InMemoryTestBase`**
@@ -104,6 +105,30 @@ graph TD
   - Use for configuration and settings tests.
 
 See [Test Configuration Guide](./test-configuration-guide.md) for detailed usage.
+
+## Design Decisions
+
+Key architectural decisions in the test infrastructure redesign:
+
+1. **Separation of Concerns**
+   - Split monolithic TestBase into specialized classes
+   - Each base class has focused responsibilities
+
+2. **Inheritance Structure**
+   - Abstract TestBase with only common functionality (BuildConfiguration)
+   - Specialized derived classes for specific test types
+
+3. **Key Base Classes**
+   - InMemoryTestBase: Isolated, fast tests with unique DB names
+   - DatabaseTestBase: Real database interaction using connection strings
+   - ConfigurationFileTestBase: Configuration testing
+
+4. **Implementation Details**
+   - Removed duplicate code through helper methods
+   - Isolated tests to prevent side effects
+   - Simplified context creation
+
+See [Test Environment Setup Guide](./test-environment-setup.md) for environment configuration.
 
 ## Naming Conventions
 

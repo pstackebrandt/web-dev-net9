@@ -36,6 +36,22 @@ Using PascalCase for each component separated by underscores:
 * `SaveOrder_WhenDatabaseUnavailable_ThrowsDbUpdateException`
 * `UpdateInventory_WhenProductSold_DecrementsStockCount`
 
+### Case Study: DockerDatabaseTests Refactoring
+
+During the test infrastructure refactoring, test methods in `DockerDatabaseTests.cs` were renamed to follow the convention. Here are examples of the transformation:
+
+| Before                        | After                                          |
+| ----------------------------- | ---------------------------------------------- |
+| `DockerDesktopIsRunning`      | `CheckDocker_WhenRunning_ReturnsTrue`          |
+| `SqlServerContainerIsRunning` | `CheckSqlContainer_WhenRunning_ReturnsTrue`    |
+| `OpenDatabaseConnection`      | `OpenConnection_WithValidCredentials_Succeeds` |
+| `CanConnectToDatabase`        | `ConnectToDatabase_WithValidSettings_Succeeds` |
+
+The refactored names make it immediately clear:
+1. What functionality is being tested
+2. Under what conditions the test runs
+3. What the expected outcome is
+
 ## Test Class Naming and Organization
 
 ### Naming Convention for Test Classes

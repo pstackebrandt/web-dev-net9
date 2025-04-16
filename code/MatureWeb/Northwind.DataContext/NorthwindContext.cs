@@ -132,13 +132,6 @@ public partial class NorthwindContext : DbContext
     {
         // This is a specific implementation by Peter an AI.
         // It's different from the book at p. 36, which hardcoded many values.
-        // It's different from the book at p. 37, which used a connection string.
-        // It's different from the book at p. 38, which used a connection string.
-        // It's different from the book at p. 39, which used a connection string.
-        // It's different from the book at p. 40, which used a connection string.
-        // It's different from the book at p. 41, which used a connection string.
-        // It's different from the book at p. 42, which used a connection string.
-        
         
         if (!optionsBuilder.IsConfigured)
         {

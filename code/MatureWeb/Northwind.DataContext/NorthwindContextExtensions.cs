@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options; // To use IOptions
 using Northwind.Shared.Configuration; // For DatabaseConnectionSettings and DatabaseConnectionBuilder
 
 namespace Northwind.EntityModels;
+
 public static class NorthwindContextExtensions
 {
     /// <summary>

@@ -30,6 +30,9 @@ public static class NorthwindContextExtensions
         this IServiceCollection services, // The type to extend.
         string? connectionString = null)
     {
+        // This is a specific implementation by Peter an AI.
+        // It's different from the book at p. 38, which hardcoded many values.
+
         if (connectionString is null)
         {
             // Get configuration from the service provider

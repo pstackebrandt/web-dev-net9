@@ -281,6 +281,10 @@ ServiceFabricBackup/
 *.sqlite
 *.sqlite3
 
+# SQLite database auxiliary files
+*.db-shm
+*.db-wal
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout

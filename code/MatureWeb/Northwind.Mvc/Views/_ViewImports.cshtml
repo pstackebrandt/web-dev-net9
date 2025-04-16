@@ -1,3 +1,10 @@
-﻿@using Northwind.Mvc
+﻿@*
+    _ViewImports.cshtml imports namespaces and adds tag helpers to all views
+    This centralizes common imports so they don't need to be repeated in each view
+    - @using statements make C# namespaces available to views
+    - @addTagHelper enables tag helpers for cleaner HTML generation
+*@
+
+@using Northwind.Mvc
 @using Northwind.Mvc.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

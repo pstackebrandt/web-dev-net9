@@ -1,22 +1,26 @@
 # Test Naming Conventions
 
-Adopting a consistent naming convention for software tests improves readability, clarity, and maintainability across the codebase, particularly when using frameworks like xUnit for .NET projects.
+Adopting a consistent naming convention for software tests improves readability, clarity, and maintainability
+across the codebase, particularly when using frameworks like xUnit for .NET projects.
 
 ## Test Method Naming
 
 ### Recommended Structure
 
-A clear test method name should consist of three core components, separated by underscores. Test methods follow standard C# PascalCase naming conventions for the overall name.
+A clear test method name should consist of three core components, separated by underscores. Test methods follow
+standard C# PascalCase naming conventions for the overall name.
 
 `[MethodUnderTest]_[Scenario]_[ExpectedResult]`
 
-*Note: Test frameworks like xUnit identify test methods using attributes (e.g., `[Fact]`, `[Theory]`), so an explicit `_Test` suffix on the method name is generally redundant and not recommended.*
+*Note: Test frameworks like xUnit identify test methods using attributes (e.g., `[Fact]`, `[Theory]`), so an
+explicit `_Test` suffix on the method name is generally redundant and not recommended.*
 
 ### Component Explanation
 
 * **MethodUnderTest**: The name of the method or logical unit of functionality being tested (PascalCase).
 * **Scenario**: The specific condition, input, or state being tested (PascalCase, describing the 'when' or 'given').
-* **ExpectedResult**: The expected outcome or state after the test executes (PascalCase, describing the 'then' or expected behavior).
+* **ExpectedResult**: The expected outcome or state after the test executes (PascalCase, describing the 'then'
+or expected behavior).
 
 ### Examples
 
@@ -38,7 +42,8 @@ Using PascalCase for each component separated by underscores:
 
 ### Case Study: DockerDatabaseTests Refactoring
 
-During the test infrastructure refactoring, test methods in `DockerDatabaseTests.cs` were renamed to follow the convention. Here are examples of the transformation:
+During the test infrastructure refactoring, test methods in `DockerDatabaseTests.cs` were renamed to follow the convention.
+Here are examples of the transformation:
 
 | Before                        | After                                          |
 | ----------------------------- | ---------------------------------------------- |
@@ -56,7 +61,8 @@ The refactored names make it immediately clear:
 
 ### Naming Convention for Test Classes
 
-Test classes should clearly correspond to the class or functional module they test, appended with the suffix `Tests` and following PascalCase:
+Test classes should clearly correspond to the class or functional module they test, appended with the suffix `Tests`
+and following PascalCase:
 
 `[ClassOrModuleName]Tests`
 
@@ -78,8 +84,12 @@ Test classes should clearly correspond to the class or functional module they te
 
 ## General Recommendations
 
-* **Consistency**: Apply the chosen naming convention uniformly across the entire test suite. The underscore pattern (`Method_Scenario_Result`) is specific to this test naming style for descriptive purposes. Standard C# naming conventions apply otherwise.
+* **Consistency**: Apply the chosen naming convention uniformly across the entire test suite. The underscore pattern
+(`Method_Scenario_Result`) is specific to this test naming style for descriptive purposes. Standard C# naming
+conventions apply otherwise.
 * **Readability**: Prioritize names that are easy to read and understand at a glance.
-* **Clarity over Brevity**: While aiming for concise names, do not sacrifice clarity. Ensure the name accurately reflects the test's specific purpose.
+* **Clarity over Brevity**: While aiming for concise names, do not sacrifice clarity. Ensure the name accurately
+reflects the test's specific purpose.
 
-By following these conventions, the test suite becomes a valuable form of documentation, making the codebase easier to understand, maintain, and extend.
+By following these conventions, the test suite becomes a valuable form of documentation, making the codebase
+easier to understand, maintain, and extend.

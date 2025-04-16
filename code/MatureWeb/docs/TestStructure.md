@@ -18,7 +18,8 @@ hierarchy, and naming conventions.
 
 ## Folder Structure
 
-> **Note:** This structure shows both existing files (**bold**) and recommended files (non-bold) that should be created as the project evolves.
+> **Note:** This structure shows both existing files (**bold**) and recommended files (non-bold) that should be
+created as the project evolves.
 
 ```text
 Northwind.UnitTests/

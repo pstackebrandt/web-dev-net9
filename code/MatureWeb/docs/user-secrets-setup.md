@@ -99,6 +99,7 @@ dotnet user-secrets list --project Northwind.UnitTests
 - **IDE not recognizing secrets**: Restart your IDE
 - **Missing user-secrets-id**: Check if the project file contains a UserSecretsId element
 - **Test failures**: Ensure you've set up secrets for the test project
-- **Different configurations**: If a test is failing only on your machine, check that your user secrets match the expected values
+- **Different configurations**: If a test is failing only on your machine, check that your user
+  secrets match the expected values
 
 If you need further assistance, contact the development team lead.

@@ -5,16 +5,18 @@ with focus on the layering pattern and credentials management.
 
 ## Table of Contents
 
-- [Configuration Layering Pattern](#configuration-layering-pattern)
-- [Key Principles](#key-principles)
-  - [1. Base Configuration as Documentation](#1-base-configuration-as-documentation)
-  - [2. Environment-Specific Overrides](#2-environment-specific-overrides)
-  - [3. Strongly-Typed Configuration](#3-strongly-typed-configuration)
-  - [4. Secret Management](#4-secret-management)
-- [User Secrets for Development](#user-secrets-for-development)
-  - [Project-Specific Secret Storage](#project-specific-secret-storage)
-- [Configuration Loading Order](#configuration-loading-order)
-- [Security Best Practices](#security-best-practices)
+- [.NET Configuration Best Practices](#net-configuration-best-practices)
+  - [Table of Contents](#table-of-contents)
+  - [Configuration Layering Pattern](#configuration-layering-pattern)
+  - [Key Principles](#key-principles)
+    - [1. Base Configuration as Documentation](#1-base-configuration-as-documentation)
+    - [2. Environment-Specific Overrides](#2-environment-specific-overrides)
+    - [3. Strongly-Typed Configuration](#3-strongly-typed-configuration)
+    - [4. Secret Management](#4-secret-management)
+  - [User Secrets for Development](#user-secrets-for-development)
+    - [Project-Specific Secret Storage](#project-specific-secret-storage)
+  - [Configuration Loading Order](#configuration-loading-order)
+  - [Security Best Practices](#security-best-practices)
 
 ## Configuration Layering Pattern
 
@@ -119,7 +121,7 @@ These secrets are stored outside your project directory in:
 
 ### Project-Specific Secret Storage
 
-Store secrets in the specific project that uses them directly (e.g., Northwind.DataContext) rather 
+Store secrets in the specific project that uses them directly (e.g., Northwind.DataContext) rather
 than the solution root. This follows best practices because:
 
 - **Direct Usage Point**: Keeps secrets with the code that consumes them

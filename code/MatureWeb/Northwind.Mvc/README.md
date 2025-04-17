@@ -32,6 +32,7 @@ ASP.NET Core MVC application for the Northwind database.
 6. Access the application at:
    ```
    https://localhost:5020/
+   https://localhost:5021/
    ```
 
 ## Configuration

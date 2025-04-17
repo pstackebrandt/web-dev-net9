@@ -86,6 +86,10 @@ app.MapControllerRoute(
 // Enable Razor Pages with static assets support
 app.MapRazorPages()
    .WithStaticAssets();
+
+// Add endpoint to display the environment name
+app.MapGet("env/", () =>
+    $"Environment: {app.Environment.EnvironmentName}");
 #endregion
 
 // Start the application

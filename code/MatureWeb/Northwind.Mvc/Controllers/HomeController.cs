@@ -15,6 +15,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        /* _logger.LogError("This is a (serious) test error");
+        _logger.LogWarning("This is a first warning");
+        _logger.LogWarning("This is a second warning");
+        _logger.LogInformation("Index method of Home controller called"); */
+
         return View();
     }
 

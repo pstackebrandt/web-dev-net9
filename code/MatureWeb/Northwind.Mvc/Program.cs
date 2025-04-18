@@ -12,9 +12,15 @@
  * - Routing for controllers and Razor pages
  */
 
+// Import required namespaces
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient; // for SqlConnectionStringBuilder
+
+// Import own namespaces
+using Northwind.EntityModels; // for AddNorthwindContext()
 using Northwind.Mvc.Data;
+
 
 #region Application Setup
 var builder = WebApplication.CreateBuilder(args);

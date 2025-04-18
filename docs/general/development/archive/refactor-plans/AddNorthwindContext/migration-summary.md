@@ -81,4 +81,4 @@ The original method is now marked as obsolete with a message directing users to 
 
 ## Conclusion
 
-All call sites of `AddNorthwindContext` have been successfully migrated to use the new overload that accepts an `IConfiguration` parameter directly. The code compiles successfully and the functionality remains unchanged, while eliminating the anti-pattern of building a temporary service provider during configuration.
+All call sites of `AddNorthwindContext` have been successfully migrated to use the new overload that accepts an `IConfiguration` parameter directly. The code compiles successfully and the functionality remains unchanged, while eliminating the anti-pattern of building a temporary service provider during configuration. 

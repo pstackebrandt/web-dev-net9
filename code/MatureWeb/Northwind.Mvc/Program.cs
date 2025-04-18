@@ -43,6 +43,24 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddControllersWithViews();
 
+string? sqlServerConnectionString = null;
+
+// Get connection string from configuration
+// We don't have a connection string in the appsettings.json file.
+// We have different values in the appsettings.json file and in the user secrets.
+// We need to combine them into a single connection string.
+
+// We did something like this already in the Northwind.UnitTests project for DatabaseTestBase.
+// We will do the equivalent here.
+
+// Add NorthwindContext to the services container
+if (sqlServerConnectionString != null)
+{
+    builder.Services.AddNorthwindContext(sqlServerConnectionString);
+} else {
+    Console.WriteLine("NorthwindConnection string is missing from configuration");
+}
+
 var app = builder.Build();
 #endregion
 

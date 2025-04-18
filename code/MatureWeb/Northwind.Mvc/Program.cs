@@ -50,15 +50,16 @@ string? sqlServerConnectionString = null;
 // We have different values in the appsettings.json file and in the user secrets.
 // We need to combine them into a single connection string.
 
-// We did something like this already in the Northwind.UnitTests project for DatabaseTestBase.
-// We will do the equivalent here.
-
 // Add NorthwindContext to the services container
-if (sqlServerConnectionString != null)
+// Passing the IConfiguration directly to avoid building a temporary service provider
+try
 {
-    builder.Services.AddNorthwindContext(sqlServerConnectionString);
-} else {
-    Console.WriteLine("NorthwindConnection string is missing from configuration");
+    // Use the overload that accepts IConfiguration directly
+    builder.Services.AddNorthwindContext(builder.Configuration);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Northwind database configuration error: {ex.Message}");
 }
 
 var app = builder.Build();

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection; // To useIServiceCollection
 using Microsoft.Extensions.Configuration; // To use IConfiguration
 using Microsoft.Extensions.Options; // To use IOptions
 using Northwind.Shared.Configuration; // For DatabaseConnectionSettings and DatabaseConnectionBuilder
+using System; // For Obsolete attribute
 
 namespace Northwind.EntityModels;
 
@@ -24,26 +25,16 @@ public static class NorthwindContextExtensions
     /// as a fallback for standalone scenarios where DI is not available.
     /// </remarks>
     /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration to use for database settings.</param>
     /// <param name="connectionString">Set to override the default.</param>
     /// <returns>An IServiceCollection that can be used to add more services.</returns>
     public static IServiceCollection AddNorthwindContext(
-        this IServiceCollection services, // The type to extend.
+        this IServiceCollection services,
+        IConfiguration configuration,
         string? connectionString = null)
     {
-        // This is a specific implementation by Peter an AI.
-        // It's different from the book at p. 38, which hardcoded many values.
-
         if (connectionString is null)
         {
-            // Get configuration from the service provider
-            var serviceProvider = services.BuildServiceProvider();
-            var configuration = serviceProvider.GetService<IConfiguration>();
-
-            if (configuration == null)
-            {
-                throw new InvalidOperationException("Configuration service is not available");
-            }
-
             // Create connection settings from configuration
             var connectionSettings = new DatabaseConnectionSettings();
             configuration.GetSection("DatabaseConnection").Bind(connectionSettings);
@@ -82,5 +73,52 @@ public static class NorthwindContextExtensions
         optionsLifetime: ServiceLifetime.Transient);
         
         return services;
+    }
+
+    /// <summary>
+    /// Adds NorthwindContext to the specified IServiceCollection.
+    /// Uses the SqlServer database provider.
+    /// </summary>
+    /// <remarks>
+    /// This is the preferred way to configure NorthwindContext because:
+    /// - It integrates with ASP.NET Core's dependency injection
+    /// - Can access all configured services and configuration providers
+    /// - Supports multiple configuration sources (not just appsettings.json)
+    /// - Proper integration with ASP.NET Core's configuration system
+    /// 
+    /// Note: This coexists with OnConfiguring in NorthwindContext.cs which serves
+    /// as a fallback for standalone scenarios where DI is not available.
+    /// </remarks>
+    /// <param name="services">The service collection.</param>
+    /// <param name="connectionString">Set to override the default.</param>
+    /// <returns>An IServiceCollection that can be used to add more services.</returns>
+    [Obsolete("This method builds a service provider during configuration, which is an anti-pattern. Use the overload that accepts IConfiguration instead: AddNorthwindContext(IServiceCollection, IConfiguration, string?).")]
+    public static IServiceCollection AddNorthwindContext(
+        this IServiceCollection services, // The type to extend.
+        string? connectionString = null)
+    {
+        // This is a specific implementation by Peter an AI.
+        // It's different from the book at p. 38, which hardcoded many values.
+
+        if (connectionString is null)
+        {
+            // Get configuration from the service provider
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetService<IConfiguration>();
+
+            if (configuration == null)
+            {
+                throw new InvalidOperationException("Configuration service is not available");
+            }
+
+            // Use the new overload that accepts IConfiguration directly
+            return AddNorthwindContext(services, configuration, connectionString);
+        }
+
+        // If connection string is provided, use it directly with the new overload
+        // Pass null for configuration since we're not using it
+        // Build a minimal configuration to avoid null checks
+        var emptyConfiguration = new ConfigurationBuilder().Build();
+        return AddNorthwindContext(services, emptyConfiguration, connectionString);
     }
 }

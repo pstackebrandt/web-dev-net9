@@ -1,5 +1,20 @@
 # Architecture Overview
 
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+  - [Table of Contents](#table-of-contents)
+  - [System Context](#system-context)
+  - [Components](#components)
+    - [Component 1](#component-1)
+    - [Component 2](#component-2)
+  - [Data Flow](#data-flow)
+  - [Technology Stack](#technology-stack)
+  - [Deployment Architecture](#deployment-architecture)
+  - [Security Architecture](#security-architecture)
+  - [Integration Points](#integration-points)
+  - [References](#references)
+
 ## System Context
 
 *Describe the high-level context of the system and its interactions with external systems.*
@@ -43,4 +58,4 @@
 
 ## References
 
-*List references to more detailed documentation.* 
+*List references to more detailed documentation.*

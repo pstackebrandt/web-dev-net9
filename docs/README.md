@@ -37,4 +37,4 @@ ProjectName/
     ├── features/              # Feature documentation
     ├── configuration.md       # Configuration details
     └── testing.md             # Testing approach
-``` 
+```

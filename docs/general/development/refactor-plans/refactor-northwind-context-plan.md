@@ -37,13 +37,24 @@
 ## 3. Implementation Plan
 
 ### Phase 1: Analysis (1 day)
-1. **Identify Call Sites**
+1. **Identify Call Sites** ✅
    - Use code search to find all locations that call `AddNorthwindContext`
    - Analyze if all call sites have access to an `IConfiguration` instance
+   - **Completed**: All call sites have been identified and documented in `AddNorthwindContext-call-sites.md`
 
-2. **Test Coverage Review**
+2. **Test Coverage Review** ✅
    - Review existing tests for `AddNorthwindContext`
    - Plan additional tests if needed
+   - **Findings**:
+     - **Current test coverage**: Two existing tests in `ConfigurationLoadingTests.cs`
+       - `NorthwindContextExtensions_UsesConnectionSettingsFromConfiguration`: Verifies that configuration values are correctly passed to the database context
+       - `Missing_Credentials_ThrowsInformativeException`: Verifies appropriate error handling for missing credentials
+     - **Test gaps**: No tests for direct connection string parameter, connection string building logic, or specific database provider options
+   - **Additional tests needed**:
+     - Test for the new overload accepting IConfiguration directly
+     - Test that both overloads produce identical results given the same input
+     - Test with connection string override parameter
+     - Test with various configuration scenarios (missing optional values, etc.)
 
 ### Phase 2: Implementation (1-2 days)
 1. **Create New Method**
@@ -92,11 +103,19 @@
   - Complete configuration
   - Missing credentials
   - Invalid connection details
+  - Direct connection string override
 
 ### Integration Tests
 - Verify database context creation works end-to-end
 - Test with real configuration in test environment
 - Test in different application types (MVC, API, etc.)
+
+### Test Tasks
+1. Create a new test class for the refactored overload
+2. Write tests that verify both overloads produce identical results
+3. Add tests for missing optional parameters
+4. Add tests for the connection string override in both methods
+5. Update existing tests to use the new overload
 
 ## 6. Timeline
 

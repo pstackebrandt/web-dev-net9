@@ -10,6 +10,7 @@ A guide for new team members on configuring database credentials securely using 
   - [Prerequisites](#prerequisites)
   - [Setup Steps for Main Application](#setup-steps-for-main-application)
   - [Setup Steps for Tests](#setup-steps-for-tests)
+  - [Managing User Secrets](#managing-user-secrets)
   - [Verifying Your Configuration](#verifying-your-configuration)
   - [Troubleshooting](#troubleshooting)
 
@@ -70,6 +71,37 @@ The test project uses the same connection settings and credentials as the main a
    dotnet user-secrets set "Database:MY_SQL_USR" "your_test_username" --project Northwind.UnitTests
    dotnet user-secrets set "Database:MY_SQL_PWD" "your_test_password" --project Northwind.UnitTests
    ```
+
+## Managing User Secrets
+
+For development, you can manage your user secrets with the following commands:
+
+```bash
+# View all secrets for a project
+dotnet user-secrets list --project Northwind.Mvc
+
+# Remove a specific secret
+dotnet user-secrets remove "Key:Name" --project Northwind.Mvc
+
+# Clear all secrets for a project
+dotnet user-secrets clear --project Northwind.Mvc
+```
+
+When working from a different directory, specify the full path to the project:
+
+```bash
+# From the solution root (code/MatureWeb/)
+dotnet user-secrets list --project Northwind.Mvc
+
+# From the repository root
+dotnet user-secrets list --project code/MatureWeb/Northwind.Mvc
+```
+
+Secrets are stored in your user profile in:
+- Windows: `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
+- macOS/Linux: `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
+
+The `user_secrets_id` is a GUID that's added to your project file when you initialize user secrets.
 
 ## Verifying Your Configuration
 

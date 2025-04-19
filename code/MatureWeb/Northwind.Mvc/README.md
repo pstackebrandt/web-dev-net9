@@ -21,15 +21,28 @@ ASP.NET Core MVC application for the Northwind database.
 3. Create your settings files:
    - Copy `appsettings.Example.json` to `appsettings.json`
    - Copy `appsettings.Development.Example.json` to `appsettings.Development.json`
-4. Restore dependencies:
+4. Initialize and set up user secrets for development:
+   ```
+   dotnet user-secrets init
+   dotnet user-secrets set "Database:MY_SQL_USR" "sa"
+   dotnet user-secrets set "Database:MY_SQL_PWD" "your_password"
+   ```
+   This keeps sensitive information out of source control and configuration files.
+
+5. Restore dependencies:
    ```
    dotnet restore
    ```
-5. Run the application:
+6. Run the application:
    ```
    dotnet run --launch-profile https
    ```
-6. Access the application at:
+
+   Alternative: When in the parent MatureWeb directory:
+   ```
+   dotnet run --project Northwind.Mvc --launch-profile https
+   ```
+7. Access the application at:
    ```
    https://localhost:5020/
    https://localhost:5021/

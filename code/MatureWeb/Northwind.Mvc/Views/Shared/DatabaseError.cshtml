@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = ViewData["ErrorTitle"] ?? "Database Error";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h4>Problem</h4>
+                        <p>@(ViewData["ErrorMessage"] ?? "A database connection error has occurred.")</p>
+                    </div>
+
+                    @if (ViewData["Solution"] != null)
+                    {
+                        <div class="alert alert-info">
+                            <h4>Solution</h4>
+                            <p>@ViewData["Solution"]</p>
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <h5>Additional Steps</h5>
+                        <ol>
+                            <li>Ensure Docker Desktop is running</li>
+                            <li>Check your SQL Server container status with: <code>docker ps -a | grep sql</code></li>
+                            <li>Start your SQL Server container: <code>docker start [container-name]</code></li>
+                            <li>If no container exists, check the project documentation for setup instructions</li>
+                        </ol>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn btn-primary">Try Again</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

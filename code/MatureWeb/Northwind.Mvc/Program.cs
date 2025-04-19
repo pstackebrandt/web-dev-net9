@@ -43,8 +43,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddControllersWithViews();
 
-string? sqlServerConnectionString = null;
-
 // Get connection string from configuration
 // We don't have a connection string in the appsettings.json file.
 // We have different values in the appsettings.json file and in the user secrets.

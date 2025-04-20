@@ -25,7 +25,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-    
   </ItemGroup>
 
   <ItemGroup>

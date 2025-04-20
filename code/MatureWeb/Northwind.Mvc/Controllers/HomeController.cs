@@ -115,6 +115,7 @@ public class HomeController : Controller
     /// Displays the privacy policy page.
     /// </summary>
     /// <returns>Privacy policy view.</returns>
+    [Route("private")]
     public IActionResult Privacy()
     {
         return View();

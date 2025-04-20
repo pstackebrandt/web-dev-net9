@@ -13,8 +13,8 @@
 # Configuration files with sensitive data
 appsettings.json
 appsettings.*.json
+!appsettings.*.Example.json
 !appsettings.Example.json
-!appsettings.Development.Example.json
 
 # Test settings
 **/appsettings.Testing.json

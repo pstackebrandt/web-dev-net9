@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Accordion Example";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="accordion" id="frameworksAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#collapseOne" aria-expanded="true" 
+                    aria-controls="collapseOne">
+                .NET Web Frameworks
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" 
+             aria-labelledby="headingOne" data-bs-parent="#frameworksAccordion">
+            <div class="accordion-body">
+                <h5>ASP.NET Core MVC</h5>
+                <p>A modern, high-performance framework for building web apps and APIs 
+                   using the Model-View-Controller pattern.</p>
+                
+                <h5>Blazor</h5>
+                <p>Create interactive web UIs using C# instead of JavaScript, 
+                   with server-side or WebAssembly client-side hosting models.</p>
+                
+                <h5>Minimal APIs</h5>
+                <p>Build lightweight HTTP APIs with minimal dependencies, 
+                   ideal for microservices and small applications.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" 
+                    data-bs-toggle="collapse" data-bs-target="#collapseTwo" 
+                    aria-expanded="false" aria-controls="collapseTwo">
+                Java Web Frameworks
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" 
+             aria-labelledby="headingTwo" data-bs-parent="#frameworksAccordion">
+            <div class="accordion-body">
+                <h5>Spring Boot</h5>
+                <p>An extension of the Spring framework providing rapid application 
+                   development with auto-configuration and embedded servers.</p>
+                
+                <h5>Jakarta EE (formerly JavaEE)</h5>
+                <p>Enterprise platform for building scalable, stable server-side 
+                   applications with standardized components.</p>
+                
+                <h5>Micronaut</h5>
+                <p>A modern JVM-based framework for building modular, easily 
+                   testable microservices and serverless applications.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" type="button" 
+                    data-bs-toggle="collapse" data-bs-target="#collapseThree" 
+                    aria-expanded="false" aria-controls="collapseThree">
+                JavaScript Frameworks (React Ecosystem)
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" 
+             aria-labelledby="headingThree" data-bs-parent="#frameworksAccordion">
+            <div class="accordion-body">
+                <h5>React</h5>
+                <p>A JavaScript library for building user interfaces with 
+                   reusable components and a virtual DOM for performance.</p>
+                
+                <h5>Next.js</h5>
+                <p>A React framework enabling server-side rendering, static site 
+                   generation, and other performance optimization features.</p>
+                
+                <h5>Remix</h5>
+                <p>A React-based framework focused on web standards and 
+                   progressive enhancement with nested routing.</p>
+            </div>
+        </div>
+    </div>
+</div>

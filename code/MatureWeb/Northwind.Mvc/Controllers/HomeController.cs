@@ -4,6 +4,7 @@ using Northwind.Mvc.Models;
 using Northwind.EntityModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
 namespace Northwind.Mvc.Controllers;
 
 /// <summary>
@@ -51,16 +52,16 @@ public class HomeController : Controller
                 VisitorCount: Random.Shared.Next(1, 1001),
                 Categories: _db.Categories.ToList(),
                 Products: _db.Products.ToList());
-            
+
             return View(model);
         }
         catch (Exception ex)
         {
-            _logger.LogDebug(ex, "Exception details: {ExceptionType}, Message: {Message}", 
+            _logger.LogDebug(ex, "Exception details: {ExceptionType}, Message: {Message}",
                 ex.GetType().FullName, ex.Message);
-            
+
             // Let's catch any database-related exception without the custom condition
-            if (ex is SqlException || ex is DbUpdateException || 
+            if (ex is SqlException || ex is DbUpdateException ||
                 ex.Message.Contains("database", StringComparison.OrdinalIgnoreCase) ||
                 ex.Message.Contains("sql", StringComparison.OrdinalIgnoreCase) ||
                 ex.Message.Contains("connect", StringComparison.OrdinalIgnoreCase) ||
@@ -74,14 +75,37 @@ public class HomeController : Controller
                 ViewData["ErrorMessage"] = "Could not connect to the Northwind database. " +
                     "Please ensure that the SQL Server Docker container is running.";
                 ViewData["Solution"] = "Try running: docker start sql-container";
-                
+
                 // Return DatabaseError view without redirect
                 return View("DatabaseError");
             }
-            
+
             _logger.LogError(ex, "An error occurred while loading the home page");
             return RedirectToAction(nameof(Error));
         }
+    }
+
+    public IActionResult ProductDetail(int? id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (!id.HasValue)
+        {
+            return BadRequest("You must provide a product ID in the route, for example, /Home/ProductDetail/21 .");
+        }
+
+        Product? model = _db.Products.Include(p => p.Category)
+            .SingleOrDefault(p => p.ProductId == id);
+
+        if (model is null)
+        {
+            return NotFound($"Product with ID {id} not found.");
+        }
+
+        return View(model);
     }
 
     /// <summary>
@@ -119,6 +143,35 @@ public class HomeController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    /// <summary>
+    /// Displays a page with a form to submit a Thing.
+    /// </summary>
+    /// <remarks> For GET and other HTTP methods but POST.</remarks>
+    /// <returns>Model binding view.</returns>
+    [Route("modelbinding")]
+    public IActionResult ModelBinding()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// Handles the submission of a Thing form.
+    /// </summary>
+    /// <param name="thing">The Thing object to submit.</param>
+    /// <returns>Model binding view with validation results.</returns>
+    [HttpPost]
+    public IActionResult ModelBinding(Thing thing)
+    {
+        HomeModelBindingViewModel model = new(
+            Thing: thing,
+            HasErrors: !ModelState.IsValid,
+            ValidationErrors: ModelState.Values.SelectMany(state => state.Errors)
+                .Select(error => error.ErrorMessage)
+        );
+
+        return View(model);
     }
 
     /// <summary>

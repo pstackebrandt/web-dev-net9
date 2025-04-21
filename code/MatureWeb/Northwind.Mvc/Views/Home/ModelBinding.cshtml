@@ -1,0 +1,54 @@
+﻿@model HomeModelBindingViewModel
+@{
+    ViewData["Title"] = "Model Binding Demo";
+}
+
+@* Page heading showing the view title from ViewData *@
+<h1>@ViewData["Title"]</h1>
+
+<div>Enter values for your thing in the following form:</div>
+
+@* Form posts to HomeController's ModelBinding action method
+   Demonstrates multiple binding sources competing for the same property:
+   - Route value: /2 (URL route parameter, wins against query string)
+   - Query string: ?id=3 (highest priority in URL)
+   - Form field: id=1 (form body value), wins against route param and query string
+   This demonstrates model binding precedence rules *@
+<form method="POST" action="/home/modelbinding/2?id=3">
+   <input name="id" value="1" />
+   <input name="color" value="Red" />
+   <input name="email" value="test@example.com" />
+   <input type="submit" />
+</form>
+@if (Model is not null)
+{
+    @* Display the submitted and model-bound values when the model exists *@
+    <h2>Submitted Thing</h2>
+    <hr />
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Model.Thing.Id</dt>
+            <dd>@Model.Thing.Id</dd>
+            <dt>Model.Thing.Color</dt>
+            <dd>@Model.Thing.Color</dd>
+            <dt>Model.Thing.Email</dt>
+            <dd>@Model.Thing.Email</dd>
+        </dl>
+    </div>
+    @if (Model.HasErrors)
+    {
+        @* Display validation errors if any were found during model binding *@
+        <div>
+            @foreach (string errorMessage in Model.ValidationErrors)
+            {
+                <div class="alert alert-danger" role="alert">@errorMessage</div>
+            }
+        </div>
+    }
+}
+@* The following is required to enable validation. *@
+@section Scripts {
+    @* _ValidationScriptsPartial includes jQuery validation libraries
+       for client-side validation before form submission *@
+    <partial name="_ValidationScriptsPartial" />
+}

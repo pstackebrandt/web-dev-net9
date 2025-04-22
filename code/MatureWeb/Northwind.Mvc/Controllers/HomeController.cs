@@ -142,10 +142,14 @@ public class HomeController : Controller
             return BadRequest(ModelState);
         }
 
+        _db.Suppliers.Add(supplier);
+        affected = _db.SaveChanges();
+
         HomeSupplierViewModel model = new(affected, supplier);
 
         if(affected == 0) // Supplier was not added
         {
+            // Views\Home\AddSupplier.cshtml
             return View(model);
         }
         else // Supplier was added successfully

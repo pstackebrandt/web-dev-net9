@@ -108,19 +108,53 @@ public class HomeController : Controller
         return View(model);
     }
 
-/// <summary>
-/// Displays a list of suppliers in a table.
-/// </summary>
-/// <returns>A view with a orderedlist of suppliers.</returns>
+    /// <summary>
+    /// Displays a list of suppliers in a table.
+    /// </summary>
+    /// <returns>A view with a orderedlist of suppliers.</returns>
     public IActionResult Suppliers()
     {
-           HomeSuppliersViewModel model = new(_db.Suppliers
-        .OrderBy(c => c.Country)
-        .ThenBy(c => c.CompanyName));
+        HomeSuppliersViewModel model = new(_db.Suppliers
+     .OrderBy(c => c.Country)
+     .ThenBy(c => c.CompanyName));
 
         return View(model);
     }
 
+    [HttpGet]
+    [Route("/home/addsupplier")]
+    public IActionResult AddSupplier()
+    {
+        HomeSupplierViewModel model = new(0, new Supplier());
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route("/home/addsupplier")]
+    [ValidateAntiForgeryToken]
+    public IActionResult AddSupplier(Supplier supplier)
+    {
+        int affected = 0;
+
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        HomeSupplierViewModel model = new(affected, supplier);
+
+        if(affected == 0) // Supplier was not added
+        {
+            return View(model);
+        }
+        else // Supplier was added successfully
+        {
+            return RedirectToAction(nameof(Suppliers));
+        }   
+    }
+
+    [HttpGet]
     public IActionResult EditSupplier(int? id)
     {
         if (!ModelState.IsValid)
@@ -128,23 +162,111 @@ public class HomeController : Controller
             return BadRequest(ModelState);
         }
 
-        if(!id.HasValue)
+        if (!id.HasValue)
         {
             return BadRequest("You must provide a supplier ID in the route, for example, /Home/EditSupplier/1 .");
         }
 
         Supplier? supplierInDb = _db.Suppliers.Find(id);
-        
+
         if (supplierInDb is null)
         {
             return NotFound($"Supplier with ID {id} not found.");
         }
-        
+
         HomeSupplierViewModel model = new(1, supplierInDb);
 
-        return View(model); 
+        return View(model);
     }
-            
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult EditSupplier(Supplier supplier)
+    {
+        int affected = 0;
+
+        if (ModelState.IsValid)
+        {
+            Supplier? supplierInDb = _db.Suppliers.Find(supplier.SupplierId);
+
+            if (supplierInDb is not null)
+            {
+                supplierInDb.CompanyName = supplier.CompanyName;
+                supplierInDb.Country = supplier.Country;
+                supplierInDb.Phone = supplier.Phone;
+
+                /*
+                // Other properties not in the HTML form would be updated here:
+                // ContactName, ContactTitle, Address, City, Region, PostalCode, Fax, etc.
+                */
+
+                affected = _db.SaveChanges();
+            }
+        }
+
+        HomeSupplierViewModel model = new(affected, supplier);
+
+        if (affected == 0) // Supplier was not updated
+        {
+            // Views\Home\EditSupplier.cshtml
+            return View(model);
+        }
+        else // Supplier was updated successfully
+        {
+            return RedirectToAction(nameof(Suppliers));
+        }
+    }
+
+    [HttpGet]
+    public IActionResult DeleteSupplier(int? id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        Supplier? supplierInDb = _db.Suppliers.Find(id);
+
+        HomeSupplierViewModel model = new(supplierInDb is null ? 0 : 1, supplierInDb);
+
+        // Views\Home\DeleteSupplier.cshtml
+        return View(model);
+    }
+
+    [HttpPost("/home/deletesupplier/{id:int?}")]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteSupplierPost(int? id)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        int affected = 0;
+
+        Supplier? supplierInDb = _db.Suppliers.Find(id);
+
+        if (supplierInDb is not null)
+        {
+            _db.Suppliers.Remove(supplierInDb);
+            affected = _db.SaveChanges();
+        }
+
+        HomeSupplierViewModel model = new(affected, supplierInDb);
+
+        if(affected == 0) // Supplier was not deleted   
+        {
+            // Views\Home\DeleteSupplier.cshtml
+            return View(model);
+        }
+        else // Supplier was deleted successfully
+        {
+            return RedirectToAction(nameof(Suppliers));
+        }
+    }
+
+
+
     /// <summary>
     /// Checks if an exception has database-related inner exceptions.
     /// </summary>

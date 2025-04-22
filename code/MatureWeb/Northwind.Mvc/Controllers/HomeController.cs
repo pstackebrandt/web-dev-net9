@@ -108,6 +108,43 @@ public class HomeController : Controller
         return View(model);
     }
 
+/// <summary>
+/// Displays a list of suppliers in a table.
+/// </summary>
+/// <returns>A view with a orderedlist of suppliers.</returns>
+    public IActionResult Suppliers()
+    {
+           HomeSuppliersViewModel model = new(_db.Suppliers
+        .OrderBy(c => c.Country)
+        .ThenBy(c => c.CompanyName));
+
+        return View(model);
+    }
+
+    public IActionResult EditSupplier(int? id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if(!id.HasValue)
+        {
+            return BadRequest("You must provide a supplier ID in the route, for example, /Home/EditSupplier/1 .");
+        }
+
+        Supplier? supplierInDb = _db.Suppliers.Find(id);
+        
+        if (supplierInDb is null)
+        {
+            return NotFound($"Supplier with ID {id} not found.");
+        }
+        
+        HomeSupplierViewModel model = new(1, supplierInDb);
+
+        return View(model); 
+    }
+            
     /// <summary>
     /// Checks if an exception has database-related inner exceptions.
     /// </summary>

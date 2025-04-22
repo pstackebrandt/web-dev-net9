@@ -2,10 +2,14 @@
 <html lang="en">
 
 <head>
+    <!-- Meta tags for character encoding and responsive viewport -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title is set dynamically using ViewData from controllers -->
     <title>@ViewData["Title"] - Northwind.Mvc</title>
+    <!-- Import map for JavaScript module handling -->
     <script type="importmap"></script>
+    <!-- CSS references for Bootstrap, site-specific styles, and component styles -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Northwind.Mvc.styles.css" asp-append-version="true" />
@@ -13,46 +17,64 @@
 
 <body>
     <header>
+        <!-- Navigation bar with responsive collapse for mobile view -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <!-- Site logo/name that links to home page -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Northwind.Mvc</a>
+                <!-- Mobile navigation toggle button -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <!-- Navigation menu items -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <!-- Home page link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <!-- Suppliers page link -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                asp-action="Suppliers">Suppliers</a>
+                        </li>
+                        <!-- Model binding page link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home"
                                 asp-action="ModelBinding">Model</a>
                         </li>
+                        <!-- Privacy page link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home"
                                 asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <!-- Authentication/login partial view inserted here -->
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+    <!-- Main content container -->
     <div class="container">
         <main role="main" class="pb-3">
+            <!-- Content from views is rendered here -->
             @RenderBody()
         </main>
     </div>
 
+    <!-- Footer with copyright information -->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - Northwind.Mvc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <!-- JavaScript references for jQuery, Bootstrap, and site-specific scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Renders scripts from individual views when provided -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

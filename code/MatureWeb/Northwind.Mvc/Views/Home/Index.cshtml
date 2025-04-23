@@ -15,6 +15,12 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
+<h3>Query products by price</h3>
+<form asp-action="ProductsThatCostMoreThan" method="get">
+    <input name="price" placeholder="Enter a product price" type="number" min="0" />
+    <input type="submit" />
+</form>
+
 @if (Model is not null)
 {
     <div id="categories" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-keyboard="true">

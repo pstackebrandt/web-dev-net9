@@ -108,6 +108,36 @@ public class HomeController : Controller
         return View(model);
     }
 
+    [HttpGet]
+    public IActionResult ProductsThatCostMoreThan(decimal? price)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (!price.HasValue)
+        {
+            return BadRequest("You must pass a product price in the query string, for example, /Home/ProductsThatCostMoreThan?price=50 .");
+        }
+
+        IEnumerable<Product> model = _db.Products
+            .Include(p => p.Category)
+            .Include(p => p.Supplier)
+            .Where(p => p.UnitPrice > price);
+
+        if (!model.Any())
+        {
+            return NotFound($"No products cost more than {price:C}.");
+        }
+
+        // Format currency using web server's culture.
+        ViewData["MaxPrice"] = price.Value.ToString("C");
+
+        // We can override the seach path convention.
+        return View("Views/Home/CostlyProducts.cshtml", model);
+    }
+
     /// <summary>
     /// Displays a list of suppliers in a table.
     /// </summary>
@@ -137,7 +167,7 @@ public class HomeController : Controller
     {
         int affected = 0;
 
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
@@ -147,7 +177,7 @@ public class HomeController : Controller
 
         HomeSupplierViewModel model = new(affected, supplier);
 
-        if(affected == 0) // Supplier was not added
+        if (affected == 0) // Supplier was not added
         {
             // Views\Home\AddSupplier.cshtml
             return View(model);
@@ -155,7 +185,7 @@ public class HomeController : Controller
         else // Supplier was added successfully
         {
             return RedirectToAction(nameof(Suppliers));
-        }   
+        }
     }
 
     [HttpGet]
@@ -241,7 +271,7 @@ public class HomeController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteSupplierPost(int? id)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
@@ -258,7 +288,7 @@ public class HomeController : Controller
 
         HomeSupplierViewModel model = new(affected, supplierInDb);
 
-        if(affected == 0) // Supplier was not deleted   
+        if (affected == 0) // Supplier was not deleted   
         {
             // Views\Home\DeleteSupplier.cshtml
             return View(model);

@@ -6,7 +6,7 @@ This project is a training and example mvc web application
 that uses the Northwind database.
 
 It intends to follow the book "Real-World Web Development with .NET 9" by M.J.Price.
-But it will also my own ideas and best practices.
+But it will also contain my own ideas and common best practices.
 
 ## Technologies Used
 

@@ -15,11 +15,53 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h3>Query products by price</h3>
-<form asp-action="ProductsThatCostMoreThan" method="get">
-    <input name="price" placeholder="Enter a product price" type="number" min="0" />
-    <input type="submit" />
-</form>
+@* 
+    Cache Tag Helper Example
+    
+    This section demonstrates the <cache> tag helper functionality:
+    
+    1. Live: Shows the current UTC date/time that updates with each page refresh
+    2. Cached: Shows a UTC date/time that persists across page refreshes
+       until the cache duration expires
+    
+    The <cache> tag helper stores rendered content in memory, improving 
+    performance by avoiding regeneration of the same content on each request.
+    
+    Compare the timestamps between refreshes to see the caching effect:
+    - The live time (blue) updates with every refresh
+    - The cached time (gray) remains the same until cache expiration
+*@
+
+<div class="row">
+    <div class="col-12 col-md-6">
+        <h2>Live</h2>
+        <p class="alert alert-info">
+            UTC: @DateTime.UtcNow.ToLongDateString() at @DateTime.UtcNow.ToLongTimeString()
+        </p>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <h2>Cached (sliding expiration)</h2>
+        <p>Duration: 10 seconds, extends with each page access</p>
+        <p class="alert alert-secondary">
+            <cache duration="10">
+                UTC: @DateTime.UtcNow.ToLongDateString() at @DateTime.UtcNow.ToLongTimeString()
+            </cache>
+        </p>
+
+        <h2>Cached (absolute expiration)</h2>
+        <p>Strictly expires after 10 seconds regardless of page reloads</p>
+        <p class="alert alert-secondary">
+            <cache expires-after="@TimeSpan.FromSeconds(10)">
+                UTC: @DateTime.UtcNow.ToLongDateString() at @DateTime.UtcNow.ToLongTimeString()
+            </cache>
+        </p>
+    </div>
+
+</div>
+
+@* temporary vertical spacing section *@
+<div class="my-4"></div>
 
 @if (Model is not null)
 {

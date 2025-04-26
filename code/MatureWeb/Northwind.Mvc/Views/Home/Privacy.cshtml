@@ -29,8 +29,10 @@
     @* Role removed from the anchor tag because of SonarQube warning, see docs/accessibility-guide.md *@
     <a asp-controller="Home" asp-action="Orders" class="btn btn-primary">Orders</a>
 
-    @* Demonstrates a controller/action link without a action parameter. The default action of the controller is used. *@
-    @* Example of a link with a protocol attribute (here not required). *@
+    @* Demonstrates a controller/action link without a action parameter. 
+       The default action of the controller is used. *@
+    @* Example of a link with a protocol attribute (here not required). Leads to creation
+       of an absulte URL. *@
     <a asp-controller="Home" class="btn btn-outline-primary" asp-protocol="https">This page</a>
 
     <a asp-controller="Home" asp-action="Orders" asp-route-id="ALFKI" class="btn btn-outline-primary">Orders for Alfreds
@@ -40,4 +42,6 @@
         Brazil</a>
 
     <a asp-controller="Home" asp-action="Orders" asp-fragment="endOfTable" class="btn btn-outline-primary">Orders (endOfTable of table)</a>
+
+    <a asp-controller="Home" asp-action="Shipper" asp-all-route-data="@ViewData["shipper1"] as IDictionary<string, string>" class="btn btn-outline-primary">Shipper</a>
 </p>

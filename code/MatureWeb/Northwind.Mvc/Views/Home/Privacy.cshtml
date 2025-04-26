@@ -4,10 +4,40 @@
 
 @* 
     Privacy Policy page for the Northwind MVC application
-    This page should contain information about how user data is handled
-    and other privacy-related information required by regulations like GDPR
+    
+    This page serves multiple purposes:
+    1. Displays the site's privacy policy (placeholder text)
+    2. Demonstrates various navigation button styles and link patterns
+    3. Shows examples of accessibility-compliant link implementations
+    
+    Navigation buttons:
+    - Simple controller/action links
+    - Links with route parameters (id, country)
+    - Link with fragment identifier (jump to anchor)
+    
+    Accessibility notes:
+    - All links use semantic HTML without redundant roles
+    - Bootstrap classes provide visual styling
+    - See docs/accessibility-guide.md for implementation details
 *@
 
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+
+<p>
+    @* Role removed from the anchor tag because of SonarQube warning, see docs/accessibility-guide.md *@
+    <a asp-controller="Home" asp-action="Orders" class="btn btn-primary">Orders</a>
+
+    @* Demonstrates a controller/action link without a action parameter. The default action of the controller is used. *@
+    @* Example of a link with a protocol attribute (here not required). *@
+    <a asp-controller="Home" class="btn btn-outline-primary" asp-protocol="https">This page</a>
+
+    <a asp-controller="Home" asp-action="Orders" asp-route-id="ALFKI" class="btn btn-outline-primary">Orders for Alfreds
+        Futterkiste</a>
+
+    <a asp-controller="Home" asp-action="Orders" asp-route-country="Brazil" class="btn btn-outline-primary">Orders in
+        Brazil</a>
+
+    <a asp-controller="Home" asp-action="Orders" asp-fragment="endOfTable" class="btn btn-outline-primary">Orders (endOfTable of table)</a>
+</p>

@@ -139,9 +139,38 @@ public class HomeController : Controller
     }
 
     /// <summary>
-    /// Displays a list of suppliers in a table.
+    /// Displays a list of orders, optionally filtered by customer ID or country (not both at once).
+    /// Results are ordered descending by total order value.
     /// </summary>
-    /// <returns>A view with a orderedlist of suppliers.</returns>
+    /// <param name="id">Optional customer ID to filter by.</param>
+    /// <param name="country">Optional country to filter by.</param>
+    /// <returns>A view with a list of orders.</returns>
+    public IActionResult Orders(string? id = null, string? country = null)
+    {
+        // Start with simplified initial model
+        IEnumerable<Order> model = _db.Orders
+        .Include(order => order.Customer)
+        .Include(order => order.OrderDetails);
+
+        // Add filtering based on parameters
+        if (id is not null)
+        {
+            model = model.Where(order => order.Customer?.CustomerId == id);
+        }
+        else if (country is not null)
+        {
+            model = model.Where(order => order.Customer?.Country == country);
+        }
+
+        // Add ordering and make enumerable
+        model = model
+            .OrderByDescending(order => order.OrderDetails
+            .Sum(detail => detail.Quantity * detail.UnitPrice))
+            .AsEnumerable();
+
+        return View(model);
+    }
+
     public IActionResult Suppliers()
     {
         HomeSuppliersViewModel model = new(_db.Suppliers
@@ -329,12 +358,48 @@ public class HomeController : Controller
     }
 
     /// <summary>
+    /// Displays a page to show a Shipper.
+    /// </summary>
+    /// <param name="shipper">The Shipper object to submit.</param>
+    /// <returns>Model binding view with validation results.</returns>
+    /// <remarks>
+    /// Action can be called with a GET or POST request.
+    /// </remarks>
+    public IActionResult Shipper(Shipper shipper)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return View(shipper);
+    }
+
+    /// <summary>
     /// Displays the privacy policy page.
     /// </summary>
     /// <returns>Privacy policy view.</returns>
     [Route("private")]
-    public IActionResult Privacy()
+    public async Task<IActionResult> Privacy()
     {
+        // Construct a dictionary to store properties of a shipper.
+        Dictionary<string, string>? keyValuePairs =  null;
+
+        // Find the shipper with ID 1.
+        Shipper? shipper1 = await _db.Shippers.FindAsync(1);
+
+        if (shipper1 is not null)
+        {
+            keyValuePairs = new()
+            {
+                { "ShipperId", shipper1.ShipperId.ToString() },
+                { "CompanyName", shipper1.CompanyName },
+                { "Phone", shipper1.Phone ?? string.Empty },
+            };
+        }
+
+        ViewData["shipper1"] = keyValuePairs;
+
         return View();
     }
 

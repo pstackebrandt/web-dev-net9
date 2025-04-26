@@ -16,6 +16,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient; // for SqlConnectionStringBuilder
+using Microsoft.AspNetCore.Hosting.StaticWebAssets; // for StaticWebAssetsLoader
 
 // Import own namespaces
 using Northwind.EntityModels; // for AddNorthwindContext()
@@ -62,6 +63,15 @@ catch (InvalidOperationException ex)
 
 var app = builder.Build();
 #endregion
+
+// Enable static web assets in Production mode
+// WORKAROUND: Static Web Assets are normally only enabled in Development environment by default.
+// This code allows static assets (CSS, JS, images) to be properly served and compressed in Production
+// mode during local testing. For proper production deployment, publish the application instead.
+if (app.Environment.IsProduction())
+{
+    StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, app.Configuration);
+}
 
 #region Middleware Pipeline
 // Configure the HTTP request pipeline.

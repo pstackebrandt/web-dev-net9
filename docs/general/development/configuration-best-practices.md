@@ -17,6 +17,11 @@ with focus on the layering pattern and credentials management.
     - [Project-Specific Secret Storage](#project-specific-secret-storage)
   - [Configuration Loading Order](#configuration-loading-order)
   - [Security Best Practices](#security-best-practices)
+  - [Static Web Assets in Production Mode](#static-web-assets-in-production-mode)
+    - [Problem](#problem)
+    - [Solution](#solution)
+    - [Benefits](#benefits)
+    - [Important Note](#important-note)
 
 ## Configuration Layering Pattern
 
@@ -156,3 +161,45 @@ Follow these practices to maintain security of configuration data:
 - Keep sensitive settings (like connection strings) out of logs
 - Encrypt sensitive configuration values when possible
 - Audit access to sensitive configuration regularly
+
+## Static Web Assets in Production Mode
+
+### Problem
+
+When running an ASP.NET Core application in Production mode for local testing, static web assets
+(CSS, JavaScript, images) may fail to load with errors like:
+
+```
+FileNotFoundException: Could not find file 'wwwroot/Identity/lib/bootstrap/dist/css/bootstrap.min.css'
+```
+
+This occurs because static web assets are automatically enabled only in Development environment by default.
+
+### Solution
+
+Add the following code to manually enable static web assets in Production mode by using the `StaticWebAssetsLoader`:
+
+```csharp
+// Enable static web assets in Production mode
+if (app.Environment.IsProduction())
+{
+    StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, app.Configuration);
+}
+```
+
+This code should be placed right after app initialization (`var app = builder.Build();`) and requires adding the namespace:
+```csharp
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+```
+
+### Benefits
+
+- Correctly serves static assets with proper compression and caching
+- Reduces file sizes by 80-90% through Brotli/Gzip compression
+- Provides content-based ETags for efficient caching
+
+### Important Note
+
+This approach is suitable for testing purposes only. For real production deployments, properly
+publishing the application is recommended. When an application is published, static assets are
+automatically optimized and don't require this workaround.

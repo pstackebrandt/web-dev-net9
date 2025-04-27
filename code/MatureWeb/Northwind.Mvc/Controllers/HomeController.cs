@@ -376,6 +376,23 @@ public class HomeController : Controller
     }
 
     /// <summary>
+    /// Processes a Shipper submission and returns it as JSON.
+    /// </summary>
+    /// <param name="shipper">The Shipper object to process.</param>
+    /// <returns>JSON representation of the submitted shipper.</returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult ProcessShipper(Shipper shipper)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return Json(shipper);
+    }
+
+    /// <summary>
     /// Displays the privacy policy page.
     /// </summary>
     /// <returns>Privacy policy view.</returns>

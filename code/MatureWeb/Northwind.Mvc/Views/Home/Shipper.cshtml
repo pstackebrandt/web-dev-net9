@@ -16,12 +16,18 @@
     - CompanyName: Name of the shipping company
     - Phone: Contact phone number for the shipper
     
+    Form submission:
+    - The form submits to Home/ProcessShipper action via POST
+    - The action returns the submitted data as JSON
+    - This is useful for AJAX requests or API-like responses
+    
     Accessibility notes:
     - Each input has an associated label with proper for/id relationships
     - Bootstrap classes provide consistent styling and accessibility
 *@
 
 <h1>@ViewData["Title"]</h1>
+<h2>Without form tag helper</h2>
 <div>
     <div class="mb-3">
         <label for="shipperIdInput" class="form-label">Shipper Id</label>
@@ -36,3 +42,47 @@
         <input class="form-control" id="phoneInput" value="@Model.Phone">
     </div>
 </div>
+
+<h2>With form tag helper</h2>
+
+<div class="alert alert-info mb-4">
+    <h4>Form Summary</h4>
+    <p>This page demonstrates two approaches to displaying form data in ASP.NET Core MVC:</p>
+    <ul>
+        <li>The first section shows basic HTML inputs without tag helpers (not a functional form)</li>
+        <li>The second section uses ASP.NET Core tag helpers for model binding in an actual form</li>
+    </ul>
+    <p>Only the second section is a true form that can be submitted. When submitted, the form data is processed by the <code>ProcessShipper</code> action 
+    method in the <code>HomeController</code>, which returns the data as JSON.</p>
+    <p>Current values: ID: @Model.ShipperId, Company: @Model.CompanyName, 
+    Phone: @(Model.Phone ?? "Not provided")</p>
+</div>
+
+<form asp-controller="Home" asp-action="ProcessShipper" class="form-horizontal">
+    <div>
+        @* 
+           Note: The SonarQube VS Code extension currently does not correctly 
+           handle the NOSONAR:S6853 suppression tags below. These tags are intended
+           to suppress the false positive warnings but may require verification
+           in the full SonarQube analysis.
+        *@
+        <div class="mb-3">
+            @* NOSONAR:S6853 *@
+            <label asp-for="ShipperId" class="form-label" /> 
+            <input asp-for="ShipperId" class="form-control">
+        </div>
+        <div class="mb-3">
+            @* NOSONAR:S6853 *@
+            <label asp-for="CompanyName" class="form-label" />
+            <input asp-for="CompanyName" class="form-control">
+        </div>
+        <div class="mb-3">
+            @* NOSONAR:S6853 *@
+            <label asp-for="Phone" class="form-label" />
+            <input asp-for="Phone" class="form-control">
+        </div>
+        <div class="mb-3">
+            <input type="submit" class="form-control">
+        </div>
+    </div>
+</form>

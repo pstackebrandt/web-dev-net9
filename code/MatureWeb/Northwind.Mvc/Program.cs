@@ -26,6 +26,8 @@ using Northwind.Mvc.Data;
 #region Application Setup
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 // Get connection string from configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -62,6 +64,8 @@ catch (InvalidOperationException ex)
 }
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 #endregion
 
 // Enable static web assets in Production mode

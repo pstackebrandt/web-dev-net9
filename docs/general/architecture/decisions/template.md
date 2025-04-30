@@ -24,4 +24,4 @@ chosen.
 
 ## References
 
-- [Link to relevant documents or discussions] 
+- [Link to relevant documents or discussions]

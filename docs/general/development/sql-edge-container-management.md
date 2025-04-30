@@ -2,12 +2,15 @@
 
 Brief guide for managing Azure SQL Edge container setup and configuration in the project.
 
+> **Note**: For the architectural decision regarding container management strategy, see [ADR-0001](../architecture/decisions/0001-sql-edge-container-management.md).
+
 ## Table of Contents
 - [SQL Edge Container Management](#sql-edge-container-management)
   - [Table of Contents](#table-of-contents)
   - [Current State](#current-state)
     - [Container Setup](#container-setup)
     - [Known Issues](#known-issues)
+    - [Port Configuration Notes](#port-configuration-notes)
   - [Improvement Tasks](#improvement-tasks)
     - [1. Aspire Integration Enhancement](#1-aspire-integration-enhancement)
     - [2. Container Initialization Strategy](#2-container-initialization-strategy)
@@ -34,13 +37,37 @@ Currently, the Azure SQL Edge container setup is handled in two different ways:
 1. **Manual Setup (Working)**
    ```powershell
    # PS: repo-root/.
-   docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrongPassword' -p 1433:1433 --name azuresqledge `
+   docker run -e "ACCEPT_EULA=1" -e "MSSQL_PID=Developer" -e "SA_PASSWORD=YourStrongPassword" -p 1433:1433 --name azuresqledge \
        -d mcr.microsoft.com/azure-sql-edge
    ```
    - Creates container with proper initialization
    - Sets required EULA acceptance
    - Configures SA password
    - Sets up port mapping
+
+### Port Configuration Notes
+The Azure SQL Edge container shows some interesting behavior regarding port configuration:
+
+1. **Exposed Ports**
+   - **1433/tcp**: Standard SQL Server port for database connections
+   - **1401/tcp**: Extensibility Framework port for R, Python, and ML services
+   - Only port 1433 is needed for basic database operations
+
+2. **Internal vs External Ports**
+   - The container logs show internal service (launchpadd) attempting to connect on port 1431
+   - However, the SQL Server instance itself listens on the standard port 1433
+   - Both port mappings (1431 or 1433) work, but 1433 is recommended
+
+3. **Best Practice**
+   - Use the standard SQL Server port 1433 for external mapping
+   - Expose port 1401 only if using extensibility features (R, Python, ML)
+   - Ignore launchpadd warnings about port 1431 as they don't affect functionality
+   - This maintains compatibility with standard SQL Server tools and configurations
+
+4. **Connection String**
+   ```
+   Server=localhost,1433;Database=master;User Id=sa;Password=YourStrongPassword;TrustServerCertificate=True
+   ```
 
 2. **Aspire Configuration (Incomplete)**
    ```csharp

@@ -2,7 +2,7 @@
 
 Comprehensive audit of Azure SQL Edge configuration locations and usage throughout the codebase.
 
-> **Note**: This is a companion document to the [SQL Edge Container Management](./sql-edge-container-management.md) 
+> **Note**: This is a companion document to the [SQL Edge Container Management](./sql-edge-container-management.md)
 > guide, which contains the overall strategy and implementation plan.
 
 ## Table of Contents
@@ -16,6 +16,8 @@ Comprehensive audit of Azure SQL Edge configuration locations and usage througho
     - [5. Test Configuration](#5-test-configuration)
     - [6. Database Context Configuration](#6-database-context-configuration)
   - [Configuration Dependencies](#configuration-dependencies)
+    - [User Secrets](#user-secrets)
+    - [Environment Variables](#environment-variables)
   - [Improvement Areas](#improvement-areas)
   - [Next Steps](#next-steps)
   - [References](#references)
@@ -119,11 +121,11 @@ docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrongPassword' -p 1433:1433 `
 3. **Documentation**
    - [ ] Create configuration guide
    - [ ] Document override hierarchy
-   - [ ] Add security guidelines 
+   - [ ] Add security guidelines
 
 ## References
 
 - [SQL Edge Container Management](./sql-edge-container-management.md) - Main management strategy and implementation plan
 - [Test Environment Setup](./testing/test-environment-setup.md) - Current test environment configuration
 - [Database Connection Settings](../../code/MatureWeb/Northwind.Shared/Configuration/DatabaseConnectionSettings.cs) - Core connection settings implementation
-- [Aspire Host Configuration](../../code/MatureWeb/MatureWeb.AppHost/Program.cs) - Aspire container configuration 
+- [Aspire Host Configuration](../../code/MatureWeb/MatureWeb.AppHost/Program.cs) - Aspire container configuration

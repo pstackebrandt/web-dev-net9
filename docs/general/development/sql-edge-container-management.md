@@ -25,7 +25,8 @@ Brief guide for managing Azure SQL Edge container setup and configuration in the
 
 ## Current State
 
-> **Note**: For a detailed audit of all SQL Edge configurations in the codebase, see the [SQL Edge Configuration Audit](./sql-edge-configuration-audit.md) document.
+> **Note**: For a detailed audit of all SQL Edge configurations in the codebase,
+> see the [SQL Edge Configuration Audit](./sql-edge-configuration-audit.md) document.
 
 ### Container Setup
 Currently, the Azure SQL Edge container setup is handled in two different ways:

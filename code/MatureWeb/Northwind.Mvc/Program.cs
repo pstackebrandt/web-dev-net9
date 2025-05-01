@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets; // for StaticWebAssetsLoader
 using Northwind.EntityModels; // for AddNorthwindContext()
 using Northwind.Mvc.Data;
 
-
 #region Application Setup
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +36,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
+// Enable detailed db error pages for development
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Configure ASP.NET Core Identity system

@@ -16,7 +16,11 @@ IResourceBuilder<ContainerResource> sqlServer = builder
     .WithEnvironment("MSSQL_PID", "Developer")
     .WithEnvironment("SA_PASSWORD", "absEdel43+-bums")
     // Map standard SQL Server port using WithEndpoint
-    .WithEndpoint(port: 1433, targetPort: 1433, name: "sql");
+    .WithEndpoint(port: 1433, targetPort: 1433, name: "sql")
+    // Add volume for database persistence
+    .WithVolume("sqldata", "/var/opt/mssql")
+    // Mount initialization scripts
+    .WithBindMount("./scripts/sql-scripts", "/docker-entrypoint-initdb.d");
 
 // Add the Northwind MVC project to the application
 // Configure it to wait for the SQL Server container to be ready before starting

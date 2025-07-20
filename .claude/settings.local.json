@@ -5,7 +5,9 @@
       "Bash(dotnet build)",
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(node:*)",
-      "Bash(claude --version)"
+      "Bash(claude --version)",
+      "Bash($PSVersionTable.PSVersion)",
+      "Bash(powershell:*)"
     ],
     "deny": []
   }

@@ -170,6 +170,13 @@ All package versions are managed in `Directory.Packages.props`:
 - Use Markdown for all documentation
 - Keep documentation up-to-date with code changes
 
+### Documentation Standards
+Follow [AI Documentation Standards](docs/general/guidelines/ai-documentation-standards.md) for detailed formatting rules.
+
+**Priority Overrides**:
+- **Always use TOCs** for architecture documents, audits, and investigation reports
+- **Always use TOCs** for any document with 3+ sections (strict enforcement)
+
 ## Environment Setup
 
 **Prerequisites:**

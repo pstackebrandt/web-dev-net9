@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **web-dev-net9**, a comprehensive .NET 9 web development training project based on "Real-World Web Development with .NET 9" by M.J. Price. The project demonstrates modern ASP.NET Core MVC patterns using the Northwind database and includes multiple related applications.
+This is **web-dev-net9**, a comprehensive .NET 9 web development training project based on
+"Real-World Web Development with .NET 9" by M.J. Price. The project demonstrates modern
+ASP.NET Core MVC patterns using the Northwind database and includes multiple related applications.
 
 **Key Technologies:**
 - .NET 9.0 (SDK 9.0.202)
@@ -109,6 +111,12 @@ dotnet ef database update --project Northwind.DataContext
 - Use implicit usings (`<ImplicitUsings>enable</ImplicitUsings>`)
 - Keep classes focused and under 500 lines
 
+### CRITICAL: Code Quality & Linting
+- **Always prevent lint errors** before creating/updating files
+- **Follow .markdownlint.json and .cursor/rules/Markdown-guidelines.mdc**
+- **Use language identifiers in code blocks**
+- **Keep lines under 120 characters**
+
 ### Testing
 - Write unit tests for business logic
 - Use xUnit testing framework
@@ -171,7 +179,7 @@ All package versions are managed in `Directory.Packages.props`:
 - Keep documentation up-to-date with code changes
 
 ### Documentation Standards
-Follow [AI Documentation Standards](docs/general/guidelines/ai-documentation-standards.md) for detailed formatting rules.
+Follow [AI Documentation Standards](guidelines/ai-documentation-standards.md) for detailed formatting rules.
 
 **Priority Overrides**:
 - **Always use TOCs** for architecture documents, audits, and investigation reports

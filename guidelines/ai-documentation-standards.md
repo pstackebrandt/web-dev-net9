@@ -18,7 +18,7 @@
 ## Table of Contents Rules
 
 ### When to Add TOC
-**Standard Rule**: Add Table of Contents to markdown files with **3+ main sections** OR **>150 lines**
+**Standard Rule**: Add Table of Contents to Markdown files with **3+ main sections** OR **>150 lines**
 
 ### TOC Format Requirements
 - **Placement**: After title/summary, before first content section
@@ -118,12 +118,12 @@ Brief summary of content
 **Pattern**: Brief rule + reference to detailed implementation
 
 #### 2. Generic Standards (Base Implementation)
-**Files**: `docs/general/guidelines/ai-*.md`  
+**Files**: `guidelines/ai-*.md`  
 **Content**: Detailed rules, examples, rationale, cross-tool standards  
 **Pattern**: Complete implementation details
 
 #### 3. Project-Specific Guidelines (Context)
-**Files**: `docs/general/guidelines/project-ai-guidelines.md`  
+**Files**: `guidelines/project-ai-guidelines.md`  
 **Content**: Project context, specific adaptations, team agreements  
 **Pattern**: Context + references to generic standards
 
@@ -173,7 +173,7 @@ Brief summary of content
 ### Claude Code Integration
 - Place high-priority rules in `CLAUDE.md`
 - Reference this file from `CLAUDE.md`
-- Use markdown formatting (Claude Code renders markdown)
+- Use Markdown formatting (Claude Code renders Markdown)
 
 ### Cursor AI Integration
 - Use `.cursor/rules/` directory for Cursor-specific rules
@@ -181,7 +181,7 @@ Brief summary of content
 - Maintain consistency with generic standards
 
 ### Future AI Tool Support
-- Generic markdown works with most AI tools
+- Generic Markdown works with most AI tools
 - Tool-specific syntax goes in tool-specific configs
 - Always provide generic fallback rules
 
@@ -189,6 +189,63 @@ Brief summary of content
 - **Same rule across tools**: Put in generic standards
 - **Tool-specific adaptation**: Put in tool config with reference
 - **Conflicting requirements**: Document in tool config with explanation
+
+## Linter Integration Standards
+
+### Active Linter Ecosystem
+**Project uses these linters**:
+- **ESLint**: JavaScript/TypeScript code quality
+- **markdownlint**: Markdown formatting and structure  
+- **SonarQube**: Code quality and security analysis
+- **Git hooks**: Auto-fix on staging (some issues)
+
+### Configuration Files Integration
+**Respect existing configurations**:
+- `.markdownlint.json`: Markdown rules (120 char limit, structure rules)
+- `.cursor/rules/markdown-guidelines.mdc`: Cursor-specific Markdown standards
+- ESLint configs: JavaScript/TypeScript standards
+- SonarQube rules: Security and quality standards
+
+### AI Tool Lint Prevention
+**For all AI tools creating/updating files**:
+
+#### Pre-Generation Checks
+- [ ] Review existing linter configurations before writing
+- [ ] Check line length limits (typically 120 characters)
+- [ ] Verify Markdown structure requirements
+- [ ] Confirm code block language identifier requirements
+
+#### Code Block Standards
+- **Always use language identifiers**: ` ```bash` not ` ``` `
+- **Follow project conventions**: Check existing files for patterns
+- **Test common patterns**: Verify against markdownlint rules
+
+#### Post-Generation Verification
+- [ ] Run applicable linters on generated content
+- [ ] Check for common Markdown violations (MD040, MD013, etc.)
+- [ ] Verify git staging doesn't introduce new lint errors
+- [ ] Test that auto-fixes don't break content meaning
+
+### Linter-Specific Guidelines
+
+#### Markdownlint Integration
+**Common violation prevention**:
+- **MD040**: Always add language to code blocks
+- **MD013**: Keep lines under configured limit (120 chars)
+- **MD025**: Only one H1 per document
+- **MD012**: No multiple consecutive blank lines
+
+#### ESLint Integration  
+**For JavaScript/TypeScript documentation**:
+- Use consistent quote styles per project config
+- Follow naming conventions in code examples
+- Respect import/export patterns
+
+#### SonarQube Integration
+**Security and quality focus**:
+- No hardcoded credentials in examples
+- Follow secure coding patterns in documentation
+- Use appropriate complexity levels in examples
 
 ## Security Guidelines for AI-Generated Documentation
 
@@ -230,5 +287,5 @@ Each AI tool should enforce these security guidelines through:
 
 ---
 
-**Usage Instructions**: Copy this file to `docs/general/guidelines/` in any project and adapt the 
+**Usage Instructions**: Copy this file to `guidelines/` in any project and adapt the
 `project-ai-guidelines.md` file for project-specific context.

@@ -53,7 +53,7 @@
 
 ### File Architecture
 ```
-docs/general/guidelines/
+guidelines/
 ├── ai-documentation-standards.md    (GENERIC - core standards)
 ├── ai-development-practices.md      (GENERIC - coding standards) 
 ├── project-ai-guidelines.md         (PROJECT-SPECIFIC - references generics)
@@ -88,7 +88,7 @@ CLAUDE.md                            (HIGH PRIORITY - tool-specific overrides)
 **Example in CLAUDE.md**:
 ```markdown
 ## Documentation Standards
-Follow [AI Documentation Standards](docs/general/guidelines/ai-documentation-standards.md).
+Follow [AI Documentation Standards](guidelines/ai-documentation-standards.md).
 **Priority Override**: Always use TOCs for architecture documents and audits.
 ```
 
@@ -111,12 +111,12 @@ Prefer minimal changes to book examples.
 
 ## Reference Pattern
 
-### Concise Reference (in tool configs):
+### Concise Reference (in tool configs)
 ```markdown
 Follow [Generic Standards](link) + these overrides: [specific rules]
 ```
 
-### Detailed Implementation (in generic files):
+### Detailed Implementation (in generic files)
 ```markdown
 Complete implementation details, examples, rationale
 ```
@@ -133,7 +133,7 @@ Complete implementation details, examples, rationale
 ## Future Considerations
 
 ### Multi-AI Tool Support
-- Generic standards work with any AI that reads markdown
+- Generic standards work with any AI that reads Markdown
 - Tool-specific files handle unique features/syntax
 - Reference pattern works universally
 
@@ -149,5 +149,5 @@ Complete implementation details, examples, rationale
 
 ---
 
-**This strategy provides the foundation for consistent, maintainable AI guidance across tools and projects 
+**This strategy provides the foundation for consistent, maintainable AI guidance across tools and projects
 while preserving flexibility for specific needs.**

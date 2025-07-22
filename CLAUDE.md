@@ -202,8 +202,26 @@ Follow [AI Documentation Standards](docs/general/guidelines/ai-documentation-sta
 - **Authentication errors**: Verify User Secrets configuration
 - **Migration issues**: Ensure EF Core tools are installed globally
 
-## Security Notes
-- Never commit database credentials to source control
+## Security Rules
+
+### CRITICAL Security Rules (Never Violate)
+- **Never write real passwords, API keys, or credentials in documentation** (even as examples)
+- **Never commit database credentials to source control**
+- **Never expose production secrets in logs or error messages**
+
+### HIGH Priority Security Practices
+- Use placeholder text for password examples: `"your_password"`, `"YourStrongPassword"`  
 - Use User Secrets for development credentials
 - Use environment variables for production deployment
 - Follow secure configuration practices in documentation
+
+### Security Examples
+✅ **Correct Documentation**:
+```bash
+dotnet user-secrets set "Database:MY_SQL_PWD" "your_password"
+```
+
+❌ **Never Do This**:
+```bash
+dotnet user-secrets set "Database:MY_SQL_PWD" "absEdel43+-bums"  # Real password!
+```

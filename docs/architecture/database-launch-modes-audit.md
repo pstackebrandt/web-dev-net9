@@ -4,6 +4,18 @@
 **Branch**: feature/dual-database-modes  
 **Context**: Following "Real-World Web Development with .NET 9" by Mark J. Price (Packt)
 
+## Table of Contents
+- [Database Launch Modes Audit](#database-launch-modes-audit)
+  - [Table of Contents](#table-of-contents)
+  - [Executive Summary](#executive-summary)
+  - [Documentation Inventory](#documentation-inventory)
+  - [Technical Analysis: Manual vs Aspire Approaches](#technical-analysis-manual-vs-aspire-approaches)
+  - [Key Conflicts and Duplications](#key-conflicts-and-duplications)
+  - [Recommendations](#recommendations)
+  - [Files Requiring Action](#files-requiring-action)
+  - [Next Steps](#next-steps)
+  - [Appendix: Complete File Inventory](#appendix-complete-file-inventory)
+
 ## Executive Summary
 
 This audit examines the dual database launch approaches in the web-dev-net9 project:
@@ -51,7 +63,7 @@ This audit examines the dual database launch approaches in the web-dev-net9 proj
 ### Manual Docker Approach (Book-Aligned) ✅
 **Working Configuration**:
 ```bash
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_PID=Developer" -e "SA_PASSWORD=absEdel43+-bums" \
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_PID=Developer" -e "SA_PASSWORD=YourStrongPassword" \
   -p 1433:1433 --name azuresqledge -d mcr.microsoft.com/azure-sql-edge
 ```
 
@@ -70,7 +82,7 @@ builder.AddContainer(name: "azuresqledge", image: "mcr.microsoft.com/azure-sql-e
     .WithLifetime(ContainerLifetime.Persistent)
     .WithEnvironment("ACCEPT_EULA", "Y")
     .WithEnvironment("MSSQL_PID", "Developer")
-    .WithEnvironment("SA_PASSWORD", "absEdel43+-bums")
+    .WithEnvironment("SA_PASSWORD", "YourStrongPassword")
     .WithEndpoint(port: 1433, targetPort: 1433, name: "sql")
     // ... more configuration
 ```

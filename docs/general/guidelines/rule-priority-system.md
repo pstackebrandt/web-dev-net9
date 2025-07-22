@@ -183,4 +183,5 @@ Rules are classified as CRITICAL, HIGH, MEDIUM, or LOW based on:
 
 ---
 
-**Implementation**: Apply this priority system consistently across CLAUDE.md, generic standards, and project-specific guidelines to ensure appropriate focus and resource allocation.
+**Implementation**: Apply this priority system consistently across CLAUDE.md, generic standards, and project-specific 
+guidelines to ensure appropriate focus and resource allocation.

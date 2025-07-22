@@ -149,4 +149,5 @@ Complete implementation details, examples, rationale
 
 ---
 
-**This strategy provides the foundation for consistent, maintainable AI guidance across tools and projects while preserving flexibility for specific needs.**
+**This strategy provides the foundation for consistent, maintainable AI guidance across tools and projects 
+while preserving flexibility for specific needs.**

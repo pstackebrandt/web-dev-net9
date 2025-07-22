@@ -230,4 +230,5 @@ Each AI tool should enforce these security guidelines through:
 
 ---
 
-**Usage Instructions**: Copy this file to `docs/general/guidelines/` in any project and adapt the `project-ai-guidelines.md` file for project-specific context.
+**Usage Instructions**: Copy this file to `docs/general/guidelines/` in any project and adapt the 
+`project-ai-guidelines.md` file for project-specific context.

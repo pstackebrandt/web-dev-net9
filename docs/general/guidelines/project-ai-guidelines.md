@@ -135,4 +135,5 @@ Support both learning and modern development:
 
 ---
 
-**Usage**: This file provides project-specific context that works alongside the generic AI documentation standards to create consistent, book-respectful AI assistance for the web-dev-net9 project.
+**Usage**: This file provides project-specific context that works alongside the generic AI documentation 
+standards to create consistent, book-respectful AI assistance for the web-dev-net9 project.

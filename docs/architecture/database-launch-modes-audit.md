@@ -22,7 +22,8 @@ This audit examines the dual database launch approaches in the web-dev-net9 proj
 1. **Manual Docker approach** (from the book)
 2. **Aspire-managed approach** (modern orchestration)
 
-**Key Finding**: Both approaches currently exist but are **incompletely integrated**, creating potential confusion and connection issues.
+**Key Finding**: Both approaches currently exist but are **incompletely integrated**, creating potential confusion 
+and connection issues.
 
 ## Documentation Inventory
 
@@ -226,4 +227,5 @@ if (Environment.GetEnvironmentVariable("ASPIRE_MANAGED") == "true") {
 
 ---
 
-**This audit provides the foundation for implementing a clean dual-database-mode approach while preserving the book's teaching methodology.**
+**This audit provides the foundation for implementing a clean dual-database-mode approach while preserving 
+the book's teaching methodology.**

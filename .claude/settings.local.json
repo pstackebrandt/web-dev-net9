@@ -8,7 +8,9 @@
       "Bash(claude --version)",
       "Bash($PSVersionTable.PSVersion)",
       "Bash(powershell:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(dotnet test:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }

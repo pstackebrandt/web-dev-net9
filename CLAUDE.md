@@ -164,6 +164,15 @@ All package versions are managed in `Directory.Packages.props`:
 - **Bootstrap Demo**: `dotnet run --project ExploringBootstrap`
 - **With Aspire**: `dotnet run --project MatureWeb.AppHost`
 
+## Task Management
+
+**Project Tasks**: All project tasks are tracked in `@tasks\TASKS.md` using a structured format with priorities, sizes, and AI assignments. Always reference this file for current work items and project status.
+
+**Task Format**: `- [ ] **P[1-4]** T[###] [S/M/L/XL] [AI] Description`
+- **Priority**: P1 (Critical) → P4 (Low)
+- **Size**: S(mall), M(edium), L(arge), XL (epic)
+- **AI Assignment**: Claude, Cursor, VS, Other
+
 ## Documentation
 
 ### Available Documentation

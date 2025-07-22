@@ -7,7 +7,8 @@
       "Bash(node:*)",
       "Bash(claude --version)",
       "Bash($PSVersionTable.PSVersion)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   }

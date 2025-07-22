@@ -2,16 +2,18 @@
 
 ## Active Tasks (Current Sprint)
 
-*No active tasks - ready for next assignment*
+- [ ] **P1** T001 [L] [Claude] Fix Database Connection Issues *(Current session)*
+  - 5 unit tests failing due to SQL Server connection errors
+  - Network-related connection issues with Docker containers
+  - Verify Docker container runs with Northwind db (M.J. Price book setup)
+  - Test main database connectivity and validate expected categories
+  - Document findings (excluding passwords for security)
 
 ---
 
 ## Backlog (Future Work)
 
 ### Database & Infrastructure (Critical)
-- [ ] **P1** T001 [L] [Unassigned] Fix Database Connection Issues [Details](https://docs.microsoft.com/troubleshoot/sql)
-  - 5 unit tests failing due to SQL Server connection errors
-  - Network-related connection issues with Docker containers
 - [ ] **P1** T002 [M] [Unassigned] Resolve Dual Database Launch Mode Conflicts
   - Implement dual-database-mode approach from audit document
   - Fix Aspire vs manual Docker conflicts

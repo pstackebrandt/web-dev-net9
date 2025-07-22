@@ -9,8 +9,10 @@ Brief guide for managing Azure SQL Edge container setup and configuration in the
   - [Table of Contents](#table-of-contents)
   - [Current State](#current-state)
     - [Container Setup](#container-setup)
-    - [Known Issues](#known-issues)
+      - [Manual Setup (Working)](#manual-setup-working)
     - [Port Configuration Notes](#port-configuration-notes)
+      - [Aspire Configuration (Incomplete)](#aspire-configuration-incomplete)
+    - [Known Issues](#known-issues)
   - [Improvement Tasks](#improvement-tasks)
     - [1. Aspire Integration Enhancement](#1-aspire-integration-enhancement)
     - [2. Container Initialization Strategy](#2-container-initialization-strategy)
@@ -33,17 +35,32 @@ Brief guide for managing Azure SQL Edge container setup and configuration in the
 
 ### Container Setup
 Currently, the Azure SQL Edge container setup is handled in two different ways:
+****
+#### Manual Setup (Working)
 
-1. **Manual Setup (Working)**
-   ```powershell
-   # PS: repo-root/.
-   docker run -e "ACCEPT_EULA=1" -e "MSSQL_PID=Developer" -e "SA_PASSWORD=YourStrongPassword" -p 1433:1433 --name azuresqledge \
-       -d mcr.microsoft.com/azure-sql-edge
-   ```
-   - Creates container with proper initialization
-   - Sets required EULA acceptance
-   - Configures SA password
-   - Sets up port mapping
+**Get sql server edge container running**
+
+```powershell
+docker pull mcr.microsoft.com/azure-sql-edge:latest
+```
+
+**Run the container**
+Recommended by Price:
+```powershell
+docker run --cap-add SYS_PTRACE -e 'ACCEPT_EULA=1' -e 'MSSQL_SA_PASSWORD=YourStrongPassword' -p 1433:1433 --name azuresqledge -d mcr.microsoft.com/azure-sql-edge
+```
+
+> **Note**: `--cap-add SYS_PTRACE` grants the container process tracing capabilities, enabling debugging tools and performance
+> profilers to work properly within the SQL Edge container. This capability is commonly needed for database diagnostics
+> and development scenarios.
+>
+> ⚠️ **Warning**: Do not use `--cap-add SYS_PTRACE` in production environments as it increases security risks by allowing
+ process inspection that could potentially expose sensitive data.
+
+- Creates container with proper initialization
+- Sets required EULA acceptance
+- Configures SA password
+- Sets up port mapping
 
 ### Port Configuration Notes
 The Azure SQL Edge container shows some interesting behavior regarding port configuration:
@@ -69,16 +86,16 @@ The Azure SQL Edge container shows some interesting behavior regarding port conf
    Server=localhost,1433;Database=master;User Id=sa;Password=YourStrongPassword;TrustServerCertificate=True
    ```
 
-2. **Aspire Configuration (Incomplete)**
+#### Aspire Configuration (Incomplete)
    ```csharp
    builder.AddContainer(name: "azuresqledge", image: "mcr.microsoft.com/azure-sql-edge")
        .WithLifetime(ContainerLifetime.Persistent);
    ```
-   - Missing essential configuration parameters
-   - No EULA acceptance
-   - No SA password
-   - No port mapping
-   - Container is set as persistent
+- Missing essential configuration parameters
+- No EULA acceptance
+- No SA password
+- No port mapping
+- Container is set as persistent
 
 ### Known Issues
 

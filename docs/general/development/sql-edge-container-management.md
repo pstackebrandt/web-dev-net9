@@ -9,7 +9,9 @@ Brief guide for managing Azure SQL Edge container setup and configuration in the
   - [Table of Contents](#table-of-contents)
   - [Current State](#current-state)
     - [Container Setup](#container-setup)
+    - [Database Installation](#database-installation)
       - [Manual Setup (Working)](#manual-setup-working)
+      - [Database Installation (Working)](#database-installation-working)
     - [Port Configuration Notes](#port-configuration-notes)
       - [Aspire Configuration (Incomplete)](#aspire-configuration-incomplete)
     - [Known Issues](#known-issues)
@@ -35,7 +37,12 @@ Brief guide for managing Azure SQL Edge container setup and configuration in the
 
 ### Container Setup
 Currently, the Azure SQL Edge container setup is handled in two different ways:
-****
+
+### Database Installation
+After setting up the container, the Northwind database can be installed using the provided SQL script.
+
+----;
+
 #### Manual Setup (Working)
 
 **Get sql server edge container running**
@@ -57,10 +64,74 @@ docker run --cap-add SYS_PTRACE -e 'ACCEPT_EULA=1' -e 'MSSQL_SA_PASSWORD=YourStr
 > ⚠️ **Warning**: Do not use `--cap-add SYS_PTRACE` in production environments as it increases security risks by allowing
  process inspection that could potentially expose sensitive data.
 
+**Verification**
+Container status check shows successful creation:
+```powershell
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | findstr -i azuresqledge
+```
+Results:
+```
+azuresqledge            Up 39 minutes   0.0.0.0:1433->1433/tcp, [::]:1433->1433/tcp
+```
+- Container is running with proper port mapping
+- Standard SQL Server port (1433) accessible from localhost
+
 - Creates container with proper initialization
 - Sets required EULA acceptance
 - Configures SA password
 - Sets up port mapping
+
+#### Database Installation (Working)
+
+**Using SQL Server Extension in VS Code/Cursor** (Recommended)
+
+1. **Connect to Container**
+   - Open SQL Server extension panel
+   - Verify connection to "Azure SQL Edge in Docker"
+
+2. **Execute Installation Script**
+   - Right-click on your Azure SQL Edge connection
+   - Select "New Query"
+   - Open the SQL script file:
+     - Press Ctrl+O to open file
+     - Navigate to: `scripts/sql-scripts/Northwind4AzureSqlEdgeDocker.sql`
+     - Click Open
+   - Execute the script: Press Ctrl+Shift+E or click Execute button
+
+3. **Verification**
+   - Northwind database appears in connection tree
+   - Tables folder contains Categories, Products, Orders, etc.
+   - Database is fully populated with sample data
+
+> **Note**: The script is 2MB in size and may take 1-2 minutes to execute completely.
+
+**Terminal Installation Issues**
+
+Terminal-based installation using `docker exec` with piped SQL content may fail due to:
+- Binary data segments in the SQL script file
+- Character encoding issues during pipe operations
+- Terminal limitations with large script files
+
+The SQL Server extension method is more reliable as it handles the script execution properly within the SQL Server context.
+
+**Database Removal and Reinstallation**
+
+To remove and reinstall the database:
+
+1. **Remove Database**:
+   
+   **Option A: Using SQL Server Extension (Recommended)**
+   - Right-click on "Northwind" database in connection tree
+   - Select "Delete Database" or use New Query with: `DROP DATABASE IF EXISTS Northwind;`
+   
+   **Option B: Using Command Line**
+   ```powershell
+   docker exec -it azuresqledge /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "my-sa-password" -Q "DROP DATABASE IF EXISTS Northwind;"
+   ```
+   > **Note**: Replace "my-sa-password" with your actual SA password (check user secrets if needed)
+
+2. **Reinstall Database**:
+   - Follow the "Database Installation" steps above
 
 ### Port Configuration Notes
 The Azure SQL Edge container shows some interesting behavior regarding port configuration:
@@ -213,6 +284,7 @@ The Azure SQL Edge container shows some interesting behavior regarding port conf
 - If Aspire fails to start container: Use `docker logs azuresqledge`
 - If database connection fails: Verify user secrets match container password
 - If port conflicts: Ensure no other SQL Server instance is using port 1433
+- If database installation fails via terminal: Use SQL Server extension method instead
 
 ## Next Steps
 

@@ -2,7 +2,7 @@
 
 ## Active Tasks (Current Sprint)
 
-- [ ] **P1** T001 [L] [Claude] Fix Database Connection Issues *(Current session)*
+- [ ] **P1** T001 [L] [Claude] Fix Database Connection Issues *(Current session)* [Session State](./session-state-T001.md)
   - 5 unit tests failing due to SQL Server connection errors
   - Network-related connection issues with Docker containers
   - Verify Docker container runs with Northwind db (M.J. Price book setup)

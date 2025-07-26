@@ -206,6 +206,41 @@ Follow [AI Documentation Standards](guidelines/ai-documentation-standards.md) fo
 - Docker Desktop for container management
 - SQL Server Management Studio (optional) for database administration
 
+## Using Transferred Task Management Assets
+
+This project's task management system has been designed for reuse across multiple projects. The `tasks/` folder contains universal workflow guides and templates that can be transferred to other projects.
+
+### Multi-File System Usage
+- **TASKS.md**: Main task tracking with priority/size indicators
+- **ai-handoff-guide.md**: Protocols for multi-assistant collaboration
+- **task-workflow.md**: Task lifecycle management processes
+- **session-state-*.md**: Session tracking templates for complex investigations
+
+### AI Collaboration Patterns
+- Use **AI Assignment** field to coordinate between Claude, Cursor, and other assistants
+- Reference session state files for complex investigations that span multiple conversations
+- Follow handoff protocols when passing tasks between AIs to maintain context
+- Update task status in real-time as work progresses
+
+### Task Lifecycle Examples
+```markdown
+## Active Tasks
+- [ ] **P1** T003 [M] [Claude] Implement user authentication [Session State](./session-state-T003.md)
+
+## Completed Tasks  
+- [x] ✅ **P1** T002 [S] [Claude] Setup project documentation (2025-01-26)
+```
+
+### Transfer Guidelines
+When transferring this system to other projects:
+1. **Copy universal files**: ai-handoff-guide.md, task-workflow.md (no changes needed)
+2. **Adapt TASKS.md**: Replace project-specific tasks with target technology tasks
+3. **Create session templates**: Adapt session-state templates for target project context
+4. **Update CLAUDE.md**: Add Task Management, Documentation Standards, and Security Rules sections
+5. **Validate**: Ensure all file paths and references work in target project
+
+For detailed transfer instructions, see: [Reusable Project Assets Guide](./tasks/reusable-project-assets-guide.md)
+
 ## Troubleshooting
 
 ### Common Issues

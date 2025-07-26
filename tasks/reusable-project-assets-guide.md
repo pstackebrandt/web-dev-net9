@@ -245,9 +245,9 @@ After copying files to the target project, verify the following:
 - Task categories don't match target project needs
 - Examples use inappropriate technology stack commands
 
-## Lessons Learned from Vue.js Transfer
+## Lessons Learned from Project Transfers
 
-### What Required Cleanup
+### Vue.js Transfer Experience
 Based on actual Vue.js project transfer experience:
 
 **Major Issues Found:**
@@ -258,6 +258,24 @@ Based on actual Vue.js project transfer experience:
 - 8 out of 9 tasks required complete rewriting for Vue.js learning objectives
 
 **Time Investment:** ~5 minutes of manual customization instead of direct copy-paste
+
+### Infrastructure Project Transfer Experience  
+Based on successful infrastructure project transfer:
+
+**What Worked Well:**
+- **Direct task migration**: All 29 tasks (CC1-CCR6, TCH1-5, GBC1-3, PA1-5 → T001-T029) migrated successfully
+- **Context preservation**: Infrastructure-specific content (Claude Code, PowerShell, Windows 11) maintained properly
+- **Priority mapping**: Infrastructure priorities correctly assigned (P1 for Claude Code setup, P2/P3 for optimization)
+- **Workflow validation**: Target Claude instance successfully tested task lifecycle (T030 creation → completion → archive)
+- **No content loss**: All original task content preserved during migration
+
+**Validation Success Factors:**
+- Target project type matched content context (infrastructure/configuration)
+- Existing task categories aligned well with new priority structure
+- Technology stack was similar enough (Windows/PowerShell) to require minimal adaptation
+- Clear validation checklist enabled thorough testing by target project's Claude instance
+
+**Time Investment:** ~10 minutes total (transfer + validation) vs Vue.js 5 minutes cleanup
 
 ### Improvements for Future Transfers
 
@@ -297,16 +315,32 @@ Based on actual Vue.js project transfer experience:
 
 ### Enhanced Transfer Workflow
 
-**Future Recommendation:**
-1. **Detect project type** first (training, web app, API, etc.)
-2. **Use template system** with variables instead of hardcoded examples
+**Proven Best Practices:**
+1. **Assess context compatibility** first (infrastructure + Windows = good fit; training + web dev = requires major adaptation)
+2. **Use comprehensive validation prompt** for target project's Claude instance to test functionality
+3. **Include systematic migration mapping** (original ID → new ID with rationale)
+4. **Provide clear validation checklist** covering file structure, content preservation, and workflow testing
+
+**Future Recommendations:**
+1. **Detect project type** first (training, web app, API, infrastructure, etc.)
+2. **Use template system** with variables instead of hardcoded examples for high-mismatch transfers
 3. **Separate universal content** (workflow guides) from customizable content (tasks)
 4. **Provide pre-built task sets** for common project types
+5. **Always include validation testing** as part of transfer completion
 
 ## Conclusion
 
 This reusable asset system provides immediate project organization value while allowing technology-specific customization. The proven task management format and security practices transfer directly, while development commands and project structure adapt to each technology stack.
 
-**Key Success Factor**: Thorough cleanup of source project-specific content ensures the target project gets a clean, functional task management system from day one.
+**Key Success Factors**: 
+1. **Context compatibility assessment** - Infrastructure projects transfer better than cross-technology transfers
+2. **Comprehensive validation** - Target project Claude instance testing ensures functionality
+3. **Content preservation** - All original task information must be maintained during migration
+4. **Systematic approach** - Clear checklists and validation steps prevent issues
 
-**Next Evolution**: Template-based approach with variables will reduce customization time from 5 minutes to 30 seconds.
+**Transfer Time Investment**:
+- **High compatibility** (infrastructure → infrastructure): ~10 minutes total
+- **Medium compatibility** (web dev → training): ~5 minutes cleanup
+- **Low compatibility** (cross-technology): Template approach recommended
+
+**Next Evolution**: Automated context assessment and template-based approach will reduce customization time to under 1 minute for any project type.

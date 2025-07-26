@@ -10,7 +10,10 @@
       "Bash(powershell:*)",
       "Bash(awk:*)",
       "Bash(dotnet test:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

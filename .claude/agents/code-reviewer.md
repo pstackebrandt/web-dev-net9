@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Use this agent when you need to review recently written code for quality, best practices, security issues, and adherence to project standards. Examples: <example>Context: The user has just implemented a new authentication feature and wants it reviewed. user: 'I just finished implementing the login functionality with JWT tokens. Can you review it?' assistant: 'I'll use the code-reviewer agent to analyze your authentication implementation for security best practices and code quality.' <commentary>Since the user is requesting code review of recently written authentication code, use the code-reviewer agent to perform a comprehensive review.</commentary></example> <example>Context: The user has completed a database migration and wants feedback. user: 'Here's my new Entity Framework migration for the user profiles table' assistant: 'Let me use the code-reviewer agent to review your EF migration for potential issues and best practices.' <commentary>The user is asking for review of a specific code change (EF migration), so use the code-reviewer agent to analyze it.</commentary></example>
-tools: Task, Bash, Glob, Grep, LS, ExitPlanMode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit, WebFetch, TodoWrite, WebSearch, mcp__ide__getDiagnostics, mcp__ide__executeCode
+tools: Bash, Glob, Grep, LS, ExitPlanMode, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, mcp__ide__getDiagnostics, mcp__ide__executeCode
 color: yellow
 ---
 

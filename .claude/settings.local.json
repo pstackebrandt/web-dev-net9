@@ -13,7 +13,9 @@
       "mcp__ide__getDiagnostics",
       "Bash(mkdir:*)",
       "Bash(cp:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(dir:*)"
     ],
     "deny": []
   }

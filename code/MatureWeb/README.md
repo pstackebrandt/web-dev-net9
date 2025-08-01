@@ -35,7 +35,7 @@ see global.json
 
 2. For detailed instructions, see [User Secrets Setup Guide](docs/user-secrets-setup.md)
 
-3. Copy `appsettings.Example.json` to `appsettings.json` (no credentials needed in this file)
+3. Copy `appsettings.Example.json` to `appsettings.json` if `appsettings.json` doesn't exist (no credentials needed in this file)
 
 ### Configuration Options
 

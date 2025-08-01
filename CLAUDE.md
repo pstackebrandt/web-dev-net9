@@ -148,7 +148,7 @@ All package versions are managed in `Directory.Packages.props`:
 ### Setting Up Development Environment
 1. Ensure .NET 9.0.202 SDK is installed
 2. Configure database credentials using User Secrets
-3. Copy `appsettings.Example.json` to `appsettings.json`
+3. Copy `appsettings.Example.json` to `appsettings.json` if `appsettings.json` doesn't exist
 4. Run `dotnet restore` to restore packages
 5. Run `dotnet build` to verify setup
 
